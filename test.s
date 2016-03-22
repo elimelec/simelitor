@@ -7,3 +7,21 @@ clc
 clv
 nop
 inc r4
+clc
+clv
+clz
+cls
+ccc
+sec
+sev
+sez
+ses
+scc
+nop
+ret
+reti
+halt
+wait
+push pc
+pop pc
+push flag

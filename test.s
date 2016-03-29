@@ -1,3 +1,4 @@
+add r1, 65535
 add r1, r2 ;ia ui ba si comenturi
 sub r2, r5
 add r1, r4 ;comment

@@ -2,6 +2,10 @@
 
 (require threading)
 
+(define (string-split-at-16 s)
+  (for/list ([i (/ (string-length s) 16)])
+    (substring s (* i 16) (* (+ i 1) 16))))
+
 (define (trim-comments s)
   (regexp-replace #rx";.*$" s ""))
 
@@ -14,6 +18,8 @@
   #hash(
         (#px"add r([0-9]{1,2}), r([0-9]{1,2})" . "000101(fill-bin \\1 4)01(fill-bin \\2 4)")
         (#px"sub r([0-9]{1,2}), r([0-9]{1,2})" . "001011(fill-bin \\1 4)01(fill-bin \\2 4)")
+
+        (#px"add r([0-9]{1,2}), ([0-9]{1,5})" . "000101(fill-bin \\1 4)000000(fill-bin \\2 16)")
 
         (#px"inc r([0-9]{1,2})" . "100001000001(fill-bin \\1 4)")
 
@@ -80,4 +86,7 @@
       file->lines
       (map format-code _)
       first-pass
-      second-pass))
+      second-pass
+      (map string-split-at-16 _)
+      flatten
+    ))

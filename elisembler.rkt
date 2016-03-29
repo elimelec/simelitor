@@ -1,7 +1,6 @@
 #lang racket
 
 (require threading)
- (require racket/hash)
 
 (define (trim-comments s)
   (regexp-replace #rx";.*$" s ""))
@@ -11,33 +10,33 @@
 
 ;; match full regex on instruction
 
-(define ins
-  (map pregexp '("clc" "clv" "clz" "cls" "ccc" "sec" "sev"
-    "sez" "ses" "scc" "nop" "ret" "reti" "halt"
-    "wait" "push pc" "pop pc" "push flag")))
-(define ops
-  '("1100000000000000" "1100001000000000" "1100010000000000"
-    "1100011000000000" "1100100000000000" "1100101000000000"
-    "1100110000000000" "1100111000000000" "1101000000000000"
-    "1101001000000000" "1110000000000000" "1110001000000000"
-    "1110010000000000" "1110011000000000" "1110100000000000"
-    "1110101000000000" "1110110000000000" "1110111000000000"))
-
-(define insops
-  (for/list ([i (length ins)])
-    (cons (list-ref ins i) (list-ref ops i))))
-
-(define hinsops (make-hash insops))
-
-(define ins2
+(define instructions
   #hash(
         (#px"add r([0-9]{1,2}), r([0-9]{1,2})" . "000101(fill-bin \\1 4)01(fill-bin \\2 4)")
         (#px"sub r([0-9]{1,2}), r([0-9]{1,2})" . "001011(fill-bin \\1 4)01(fill-bin \\2 4)")
 
         (#px"inc r([0-9]{1,2})" . "100001000001(fill-bin \\1 4)")
-        ))
 
-(define instructions (hash-union ins2 hinsops))
+        (#px"nop" . "1110000000000000")
+        (#px"wait" . "1110100000000000")
+        (#px"sec" . "1100101000000000")
+        (#px"scc" . "1101001000000000")
+        (#px"halt" . "1110011000000000")
+        (#px"sez" . "1100111000000000")
+        (#px"sev" . "1100110000000000")
+        (#px"reti" . "1110010000000000")
+        (#px"clc" . "1100000000000000")
+        (#px"clz" . "1100010000000000")
+        (#px"clv" . "1100001000000000")
+        (#px"cls" . "1100011000000000")
+        (#px"ccc" . "1100100000000000")
+        (#px"ret" . "1110001000000000")
+        (#px"ses" . "1101000000000000")
+        (#px"push flag" . "1110111000000000")
+        (#px"pop flag" . "1111000000000000")
+        (#px"push pc" . "1110101000000000")
+        (#px"pop pc" . "1110110000000000")
+        ))
 
 (define (strip-whitespace s)
   (regexp-replace* #rx" " s ""))
@@ -82,4 +81,3 @@
       (map format-code _)
       first-pass
       second-pass))
-      ; (display-lines-to-file _ (string-replace filename ".s" ".obj"))))

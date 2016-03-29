@@ -25,3 +25,4 @@ wait
 push pc
 pop pc
 push flag
+pop flag

@@ -3,6 +3,8 @@
 (require threading)
 (require "bin.rkt")
 
+(provide compile-asm)
+
 (define (string-split-at-16 s)
   (for/list ([i (/ (string-length s) 16)])
     (substring s (* i 16) (* (+ i 1) 16))))

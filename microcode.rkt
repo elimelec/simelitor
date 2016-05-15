@@ -96,14 +96,14 @@
                       ("CIL" . "1000")
                       )
                 #hash(
-                      ("(INDEX0)" . "000")
-                      ("(INDEX1)" . "001")
-                      ("(INDEX2)" . "010")
-                      ("(INDEX3)" . "011")
-                      ("(INDEX4)" . "100")
-                      ("(INDEX5)" . "101")
-                      ("(INDEX6)" . "110")
-                      ("(INDEX7)" . "111")
+                      ("INDEX0" . "000")
+                      ("INDEX1" . "001")
+                      ("INDEX2" . "010")
+                      ("INDEX3" . "011")
+                      ("INDEX4" . "100")
+                      ("INDEX5" . "101")
+                      ("INDEX6" . "110")
+                      ("INDEX7" . "111")
                       )
                 #hash(
                       ("nT" . "0")
@@ -112,57 +112,8 @@
                 )
   )
 
-(define (bin n)
-  (cond
-    [(< n 2) (number->string n)]
-    [else (string-append (bin (quotient n 2)) (number->string (remainder n 2)))]))
-
-(define (fill-bin n l)
-  (~a (bin n) #:min-width l #:align 'right #:left-pad-string "0"))
-
-
-(define (that-thing-with-jump instr)
-  (let ([line (string-split instr)])
-       (for/list ([instr line] [i (length line)])
-         (cond
-          [(and (= i 0) (string=? instr "0000"))
-           "0000 000 0 00000000"]
-          [(and (= i 0) (string=? instr "NONE"))
-           "0000"]
-          [(and (= i 2) (string-contains? instr "INDEX"))
-           (string-append (hash-ref (list-ref codes 7) instr) " 0")]
-          [(and (= 3 (length line)) (= i 2) (string=? (list-ref line 1) "JUMP"))
-           (string-append "000 0 " (fill-bin (hash-ref labels instr) 8))]
-          [(and (= 4 (length line)) (= i 3) (string=? (list-ref line 1) "JUMPI"))
-           (fill-bin (hash-ref labels instr) 8)]
-          [(and (= 6 (length line)) (= i (- (length line) 1)) (string=? instr "STEP"))
-            (fill-bin (hash-ref labels (list-ref line 3)) 8)]
-          [(and (= 6 (length line)) (= i (- (length line) 2)) (string=? instr "ELSE"))
-            (if (string-prefix? (list-ref line 1) "N") "1" "0")]
-          [(and (= 6 (length line)) (= i 1))
-            (hash-ref
-             (list-ref codes 6)
-             (if (string-prefix? instr "N")
-                 (string-replace instr "N" "") instr))]
-          [(and (= 6 (length line)) (= i 2) (string=? instr "JUMP"))
-           "000"]
-          [(and (not (= 2 (length line))) (= i (- (length line) 1)) (string=? instr "STEP"))
-            (fill-bin 0 8)]
-          [(and (= i 1) (= 2 (length line)) (string=? (list-ref line 0) "NONE") (string=? instr "STEP"))
-           (string-append "000 1 " (fill-bin 0 8))]
-          [else ""]))))
-
-(define (jumpi-trans instr)
-  (let ([s (string-join (that-thing-with-jump instr))])
-    (if (= (string-length (string-replace s " " "")) 16)
-        s
-        (raise (string-append instr " => " s))
-        ;s
-        )))
-
 (define lines (file->lines "microprogram_emulare_text.txt"))
 (set! lines (map (lambda (s) (string-replace s "\t" "")) lines))
-(define orig-lines lines)
 (set! lines (map (lambda (s) (string-replace s ":" ":,")) lines))
 (set! lines (map (lambda (s) (string-split s ",")) lines))
 
@@ -171,7 +122,7 @@
   (for/hash ([i (length lines)]
              [line lines]
              #:when (string-contains? (car line) ":"))
-    (values (string-replace (car line) ":" "") i)))
+    (values (car line) i)))
 
 ; I have no idea why it doesn't work with one pass
 (set! lines
@@ -187,18 +138,8 @@
         (for/list ([instr line]
                    [i (length line)]
                    #:when (not (string-contains? instr ":")))
-          (if (= i (- (length line) 1))
-           (jumpi-trans instr)
-           (hash-ref (list-ref codes i) instr instr))
+          (hash-ref (list-ref codes i) instr instr)
           )))
-        
-(set! lines (map string-join lines))
-(set! lines (map (lambda (s) (string-replace s " " "")) lines))
 
-(for/list ([i (length lines)]
-             #:when (not (= 39 (string-length (list-ref lines i)))))
-    (list
-     i
-     (string-length (list-ref lines i))
-     (list-ref orig-lines i)
-     (list-ref lines i)))
+(set! lines
+      (map string-join lines))

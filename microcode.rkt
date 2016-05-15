@@ -141,5 +141,7 @@
           (hash-ref (list-ref codes i) instr instr)
           )))
 
-(set! lines
-      (map string-join lines))
+(set! lines (map string-join lines))
+(set! lines (map
+             (lambda (s) (string-append "0000000000000000000000000 " s))
+             lines))

@@ -1,6 +1,7 @@
 #lang racket
 
 (require threading)
+(require "bin.rkt")
 
 (define (string-split-at-16 s)
   (for/list ([i (/ (string-length s) 16)])
@@ -46,14 +47,6 @@
 
 (define (strip-whitespace s)
   (regexp-replace* #rx" " s ""))
-
-(define (bin n)
-  (cond
-    [(< n 2) (number->string n)]
-    [else (string-append (bin (quotient n 2)) (number->string (remainder n 2)))]))
-
-(define (fill-bin n l)
-  (~a (bin n) #:min-width l #:align 'right #:left-pad-string "0"))
 
 (define (translate-instruction i)
   (regexp-replace*

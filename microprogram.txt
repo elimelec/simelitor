@@ -1,0 +1,138 @@
+IFCH:	Pd0s,PdPCd,SUM,PmADR,+2PC,IFCH,none JUMPI (INDEX1) B1
+B1:		none,none,none,none,none,none,none JUMPI (INDEX2) AM_S
+B2:		none,none,none,none,none,none,none JUMPI (INDEX3) AM_D
+B3:		none,none,none,none,none,none,none JUMPI (INDEX6) BR
+B4:		none,none,none,none,none,none,none JUMPI (INDEX7) CLC
+AM_S:	Pd0s,PdPCd,SUM,PmADR,+2PC,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmT,none,none,none JUMPI (INDEX3) AM_D
+AD_S:	PdRGs,none,SUM,PmT,none,none,none JUMPI (INDEX3) AM_D
+		none,none,none,none,none,none,none
+AI_S:	PdRGs,none,SUM,PmADR,none,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmT,none,none,none JUMPI (INDEX3) AM_D
+AX_S:	Pd0s,PdPCd,SUM,PmADR,none,READ,none STEP
+		PdRGs,PdMDRd,SUM,PmADR,+2PC,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmT,none,none,none JUMPI (INDEX3) AM_D
+AM_D:	Pd0s,PdPCd,SUM,PmADR,+2PC,READ,none JUMPI (INDEX1) CB1
+		none,none,none,none,none,none,none
+AD_D:	Pd0s,PdRGd,SUM,PmMDR,none,none,none JUMPI (INDEX1) CB1
+		none,none,none,none,none,none,none
+AI_D:	Pd0s,PdRGd,SUM,PmADR,none,READ,none JUMPI (INDEX1) CB1
+		none,none,none,none,none,none,none
+AX_D:	Pd0s,PdPCd,SUM,PmADR,none,READ,none STEP
+		PdMDRs,PdRGd,SUM,PmADR,+2PC,READ,none JUMPI (INDEX1) CB1
+CB1:	none,none,none,none,none,none,none JUMPI (INDEX4) MOV
+CB2:	none,none,none,none,none,none,none JUMPI (INDEX5) CLR
+MOV:	PdTs,Pd0d,SUM,PmMDR,none,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+ADD:	PdMDRs,PdTd,SUM,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+SUB:	PdMDRs,PdnTd,SUM,PmMDR,(CIN+PdCOND),none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+CMP:	PdMDRs,PdnTd,SUM,PmMdr,(CIN+PdCOND),none,none JUMP INTTEST 
+		none,none,none,none,none,none,none
+AND:	PdMDRs,PdTd,AND,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+OR:		PdMDRs,PdTd,OR,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+XOR:	PdMDRs,PdTd,XOR,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+NOT_AD:	none,none,none,none,none,WRITE,none JUMP INTTEST
+CLR:	Pd0s,Pd0d,SUM,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+NEG:	Pd0s,PdMDRd,nDBUS,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+INC:	Pd1s,PdMDRd,SUM,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+DEC:	Pd-1s,PdMDRd,SUM,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+ASL:	Pd0s,PdMDRd,ASL,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+ASR:	Pd0s,PdMDRd,ASR,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+LSR:	Pd0s,PdMDRd,LSR,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+ROL:	Pd0s,PdMDRd,ROL,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD 
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+ROR:	Pd0s,PdMDRd,ROR,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+RLC:	Pd0s,PdMDRd,RLC,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+RRC:	Pd0s,PdMDRd,RRC,PmMDR,PdCOND,none,IF NAD JUMP NOT_AD ELSE STEP
+		Pd0s,PdMDRd,SUM,PmRG,none,none,none JUMP INTTEST
+JMP:	Pd0s,PdMDRd,SUM,PmPC,none,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+CALL:	Pd0s,PdMDRd,SUM,PmT,none,none,none STEP
+		Pd0s,PdPCd,SUM,PmMDR,-2SP,none,none JUMP CONTCALL
+PUSH RG:Pd0s,PdRGd,SUM,PmMDR,-2SP,none,none STEP
+		Pd0s,PdSPd,SUM,PmADR,none,WRITE,none JUMP INTTEST
+POP RG:	Pd0s,PdSPd,SUM,PmADR,none,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmRG,+2SP,none,none JUMP INTTEST
+CONTCALL:Pd0s,PdSPd,SUM,PmADR,none,WRITE,none STEP
+		Pd0s,PdTd,SUM,PmPC,none,none,none JUMP INTTEST
+INTTEST:none,none,none,none,none,none,IF INT JUMP INT ELSE STEP
+		none,none,none,none,none,none,none JUMP IFCH
+BR:		PdIR[Off]s,PdPCd,SUM,PmPC,none,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+BNE:	none,none,none,none,none,none,IF NZ JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BEQ:	none,none,none,none,none,none,IF Z JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BPL:	none,none,none,none,none,none,IF NS JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BMI:	none,none,none,none,none,none,IF S JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BCS:	none,none,none,none,none,none,IF C JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BCC:	none,none,none,none,none,none,IF NC JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BVS:	none,none,none,none,none,none,IF V JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+BVC:	none,none,none,none,none,none,IF NV JUMP BR ELSE STEP
+		none,none,none,none,none,none,none JUMP NOP
+CLC:	none,none,none,none,A(0)C,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+CLV:	none,none,none,none,A(0)V,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+CLZ:	none,none,none,none,A(0)Z,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+CLS:	none,none,none,none,A(0)S,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+CCC:	none,none,none,none,A(0)(CVZS),none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+SEC:	none,none,none,none,A(1)C,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+SEV:	none,none,none,none,A(1)V,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+SEZ:	none,none,none,none,A(1)Z,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+SES:	none,none,none,none,A(1)S,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+SCC:	none,none,none,none,A(1)(CVZS),none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+NOP:	none,none,none,none,none,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+RET:	Pd0s,PdSPd,SUM,PmADR,none,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmPC,+2SP,none,none JUMP INTTEST
+RETI:	Pd0s,PdSPd,SUM,PmADR,A(1)BVI,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmPC,+2SP,none,none JUMP RETI_CONT
+HALT:	none,none,none,none,A(0)BPO,none,none JUMP INTTEST
+		none,none,none,none,none,none,none
+WAIT:	none,none,none,none,none,none,IF INT JUMP INT ELSE STEP
+		none,none,none,none,none,none,none JUMP WAIT
+PUSH PC:Pd0s,PdPCd,SUM,PmMDR,-2SP,none,none STEP
+		Pd0s,PdSPd,SUM,PmADR,none,WRITE,none JUMP INTTEST
+POP PC:	Pd0s,PdSPd,SUM,PmADR,none,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmPC,+2SP,none,none JUMP INTTEST
+PUSH FLAG:Pd0s,PdFLAGd,SUM,PmMDR,-2SP,none,none STEP
+		Pd0s,PdSPd,SUM,PmADR,none,WRITE,none JUMP INTTEST
+POP FLAG:Pd0s,PdSPd,SUM,PmADR,none,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmFLAG,+2SP,none,none JUMP INTTEST
+INT:	Pd0s,PdFLAGd,SUM,PmMDR,-2SP,none,none STEP
+		Pd0s,PdSPd,SUM,PmADR,none,WRITE,none STEP
+		Pd0s,PdPCd,SUM,PmMDR,-2SP,none,none STEP
+		Pd0s,PdSPd,SUM,PmADR,none,WRITE,none STEP
+		Pd0s,PdIVRd,SUM,PmADR,none,none,none STEP
+		none,none,none,none,none,READ,none STEP
+		PdMDRs,Pd0d,SUM,PmPC,A(0)BVI,none,none JUMP IFCH
+RETI_CONT:Pd0s,PdSPd,SUM,PmADR,none,READ,none STEP
+		Pd0s,PdMDRd,SUM,PmFLAG,+2SP,none,none JUMP INTTEST

@@ -55,7 +55,15 @@
 (define eval-input (new text-field%
                         [label "Code"]
                         [parent eval-panel]
-                        [callback (lambda (text-field event) "Eval Text")]))
+                        [callback
+                         (lambda (text-field event)
+                           (let* ([text (send text-field get-value)]
+                                  [ok (syntax-ok? (list text))])
+                             (define (set-color color) (send text-field set-field-background (make-object color% color)))
+                             (cond
+                               [(string=? text "") (set-color "white")]
+                               [ok (set-color "green")]
+                               [else (set-color "red")])))]))
 (define eval-button (new button%
                          [parent eval-panel]
                          [label "Eval"]

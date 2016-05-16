@@ -4,7 +4,8 @@
 (require "bin.rkt")
 
 (provide compile-asm-file
-         compile-asm)
+         compile-asm
+         syntax-ok?)
 
 (define (string-split-at-16 s)
   (for/list ([i (/ (string-length s) 16)])

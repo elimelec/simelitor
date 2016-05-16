@@ -3,7 +3,8 @@
 (require threading)
 (require "bin.rkt")
 
-(provide compile-asm)
+(provide compile-asm-file
+         compile-asm)
 
 (define (string-split-at-16 s)
   (for/list ([i (/ (string-length s) 16)])
@@ -76,12 +77,18 @@
 (define (second-pass code)
   (map translate-instruction code))
 
-(define (compile-asm filename)
+(define (compile-asm-file filename)
   (~> filename
       file->lines
       (map format-code _)
       first-pass
       second-pass
       (map string-split-at-16 _)
-      flatten
-    ))
+      flatten))
+(define (compile-asm list)
+  (~> list
+      (map format-code _)
+      first-pass
+      second-pass
+      (map string-split-at-16 _)
+      flatten))

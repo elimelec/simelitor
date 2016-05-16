@@ -16,7 +16,7 @@
   (define path (get-file))
   (when path
     (create-list source-panel (file->lines path) "Source Code")
-    (create-list source-panel (compile-asm path) "Asembled Code")))
+    (create-list source-panel (compile-asm-file path) "Asembled Code")))
 
 (define (open-microcode button event)
   (define path (get-file))

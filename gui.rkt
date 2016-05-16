@@ -34,11 +34,14 @@
                            [parent frame]
                            [style (list 'border)]))
 (define source-panel (new horizontal-panel%
-                               [parent frame]
-                               [style (list 'border)]))
+                          [parent frame]
+                          [style (list 'border)]))
 (define microcode-panel (new horizontal-panel%
                              [parent frame]
                              [style (list 'border)]))
+(define eval-panel (new horizontal-panel%
+                        [parent frame]
+                        [style (list 'border)]))
 
 (define open-source-button (new button%
                                 [parent buttons-panel]
@@ -48,5 +51,14 @@
                                    [parent buttons-panel]
                                    [label "Open Microcode"]
                                    [callback open-microcode]))
+
+(define eval-input (new text-field%
+                        [label "Code"]
+                        [parent eval-panel]
+                        [callback (lambda (text-field event) "Eval Text")]))
+(define eval-button (new button%
+                         [parent eval-panel]
+                         [label "Eval"]
+                         [callback (lambda (button event) "Eval")]))
 
 (send frame show #t)

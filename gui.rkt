@@ -52,21 +52,25 @@
                                    [label "Open Microcode"]
                                    [callback open-microcode]))
 
+(define (eval-input-changed text-field event)
+  (let* ([event (send event get-event-type)]
+         [text (send text-field get-value)]
+         [ok (syntax-ok? (list text))])
+    (define (set-color color) (send text-field set-field-background (make-object color% color)))
+    (cond
+      [(eq? event 'text-field-enter) (eval-asm)]
+      [(string=? text "") (set-color "white")]
+      [ok (set-color "green")]
+      [else (set-color "red")])))
+(define (eval-asm)
+  (send (send eval-input get-editor) erase))
 (define eval-input (new text-field%
                         [label "Code"]
                         [parent eval-panel]
-                        [callback
-                         (lambda (text-field event)
-                           (let* ([text (send text-field get-value)]
-                                  [ok (syntax-ok? (list text))])
-                             (define (set-color color) (send text-field set-field-background (make-object color% color)))
-                             (cond
-                               [(string=? text "") (set-color "white")]
-                               [ok (set-color "green")]
-                               [else (set-color "red")])))]))
+                        [callback eval-input-changed]))
 (define eval-button (new button%
                          [parent eval-panel]
                          [label "Eval"]
-                         [callback (lambda (button event) "Eval")]))
+                         [callback (lambda (button event) (eval-asm))]))
 
 (send frame show #t)

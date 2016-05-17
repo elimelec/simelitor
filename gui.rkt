@@ -2,6 +2,7 @@
 
 (require "elisembler.rkt")
 (require "bin.rkt")
+(require "cpu.rkt")
 
 (define (create-list parent choices name)
   (new list-box%
@@ -26,7 +27,8 @@
     (define microprogram-text (file->lines (string-replace path-string "bin" "txt")))
 
     (create-list microcode-panel microprogram-text "Text Microcode")
-    (create-list microcode-panel microprogram-bin "Binary Microcode")))
+    (create-list microcode-panel microprogram-bin "Binary Microcode")
+    (set-microprogram! (list->vector microprogram-bin))))
 
 (define frame (new frame% [label "Simelitor"]))
 

@@ -1,12 +1,6 @@
 #lang racket
 
-(provide bin
-         fill-bin)
+(provide bin)
 
-(define (bin n)
-  (cond
-    [(< n 2) (number->string n)]
-    [else (string-append (bin (quotient n 2)) (number->string (remainder n 2)))]))
-
-(define (fill-bin n l)
-  (~a (bin n) #:min-width l #:align 'right #:left-pad-string "0"))
+(define (bin n l)
+  (~a (number->string n 2) #:min-width l #:align 'right #:left-pad-string "0"))

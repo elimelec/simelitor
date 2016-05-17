@@ -10,7 +10,7 @@
              sbus dbus rbus))
 
 (define (make-cpu)
-  (define zero (fill-bin 0 16))
+  (define zero (bin 0 16))
   (cpu (make-vector 16 zero)
        zero zero zero zero zero zero zero zero
        (make-vector 65536 zero)

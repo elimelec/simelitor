@@ -65,7 +65,10 @@
       [ok (set-color "green")]
       [else (set-color "red")])))
 (define (eval-asm)
-  (send (send eval-input get-editor) erase))
+  (define input (send eval-input get-value))
+  (define code (compile-asm (list input)))
+  (send (send eval-input get-editor) erase)
+  (set-memory! 0 (first code)))
 (define eval-input (new text-field%
                         [label "Code"]
                         [parent eval-panel]

@@ -119,4 +119,10 @@
   (let ([sum (bin (+ (dec (sbus)) (dec (dbus))) 16)])
     (set-rbus! sum)))
 
+(define (step)
+  (cond
+    [(state0?) (begin
+                  (set-mir! (microprogram (dec (mar))))
+                  (set-state1!))]))
+
 (define a-cpu (make-cpu))

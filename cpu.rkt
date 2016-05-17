@@ -81,4 +81,8 @@
 (define (set-rbus! value)
   (set-cpu-rbus! a-cpu value))
 
+(define (sum)
+  (let ([sum (bin (+ (dec (sbus)) (dec (dbus))) 16)])
+    (set-rbus! sum)))
+
 (define a-cpu (make-cpu))

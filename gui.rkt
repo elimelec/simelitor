@@ -53,6 +53,10 @@
                                    [parent buttons-panel]
                                    [label "Open Microcode"]
                                    [callback open-microcode]))
+(define step-button (new button%
+                         [parent buttons-panel]
+                         [label "Step"]
+                         [callback (lambda (button event) (step))]))
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]

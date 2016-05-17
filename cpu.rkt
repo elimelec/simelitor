@@ -7,7 +7,7 @@
 (struct cpu (registers
              flag sp t pc ivr adr mdr ir
              memory
-             microprogram
+             microprogram state
              sbus dbus rbus) #:mutable)
 
 (define (make-cpu)
@@ -15,7 +15,7 @@
   (cpu (make-vector 16 zero)
        zero zero zero zero zero zero zero zero
        (make-vector 65536 zero)
-       (make-vector 138 (bin 0 64))
+       (make-vector 138 (bin 0 64)) "00"
        zero zero zero))
 
 (define (register n)
@@ -72,6 +72,23 @@
   (vector-ref (cpu-microprogram a-cpu) address))
 (define (set-microprogram! microprogram)
   (set-cpu-microprogram! a-cpu microprogram))
+
+(define (state)
+  (cpu-state a-cpu))
+(define (state0?)
+  (string=? (state) "00"))
+(define (state1?)
+  (string=? (state) "01"))
+(define (state2?)
+  (string=? (state) "11"))
+(define (set-state! state)
+  (set-cpu-state! a-cpu state))
+(define (set-state0!)
+  (set-state! "00"))
+(define (set-state1!)
+  (set-state! "01"))
+(define (set-state2!)
+  (set-state! "11"))
 
 (define (sbus)
   (cpu-sbus a-cpu))

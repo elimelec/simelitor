@@ -68,8 +68,10 @@
 (define (set-mar! value)
   (set-cpu-mar! a-cpu value))
 
-(define (mir)
-  (cpu-mir a-cpu))
+(define mir
+  (lambda ([from 0]
+           [to (string-length (cpu-mir a-cpu))])
+    (substring (cpu-mir a-cpu) from to)))
 (define (set-mir! value)
   (set-cpu-mir! a-cpu value))
 

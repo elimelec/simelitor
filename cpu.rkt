@@ -15,7 +15,7 @@
   (cpu (make-vector 16 zero)
        zero zero zero zero zero zero zero zero zero (bin 0 64)
        (make-vector 65536 zero)
-       (make-vector 138 (bin 0 64)) "00"
+       (make-vector 138 (bin 0 64)) 0
        zero zero zero))
 
 (define (register n)
@@ -87,20 +87,8 @@
 
 (define (state)
   (cpu-state a-cpu))
-(define (state0?)
-  (string=? (state) "00"))
-(define (state1?)
-  (string=? (state) "01"))
-(define (state2?)
-  (string=? (state) "11"))
 (define (set-state! state)
   (set-cpu-state! a-cpu state))
-(define (set-state0!)
-  (set-state! "00"))
-(define (set-state1!)
-  (set-state! "01"))
-(define (set-state2!)
-  (set-state! "11"))
 
 (define (sbus)
   (cpu-sbus a-cpu))
@@ -118,13 +106,121 @@
   (set-cpu-rbus! a-cpu value))
 
 (define (sum)
+  (println "sum")
   (let ([sum (bin (+ (dec (sbus)) (dec (dbus))) 16)])
     (set-rbus! sum)))
 
+(define (pd0s)
+  (println "pd0s")
+  (set-sbus! (bin 0 16)))
+
+(define (pdpcd)
+  (println "pdpcd")
+  (set-dbus! (pc)))
+
+(define (pmadr)
+  (println "pmadr")
+  (set-adr! (rbus)))
+
+(define (+2pc)
+  (println "+2pc")
+  (let ([new-pc (bin (+ (dec (pc)) 2) 16)])
+    (set-pc! new-pc)))
+
+(define (none)
+  (println "none"))
+
+(define (ifch)
+  (println "ifch")
+  (let ([ir (memory (dec (adr)))])
+    (set-ir! ir)))
+
+(define (error op block)
+  (let ([error (string-append op " " block " function not yet implemented")])
+    (raise error)))
+
+(define (exec-sbus op)
+  (cond
+    [(string=? op "1011") (pd0s)]
+    [else (error op "sbus")]))
+
+(define (exec-dbus op)
+  (cond
+    [(string=? op "0110") (pdpcd)]
+    [else (error op "dbus")]))
+
+(define (exec-alu op)
+  (cond
+    [(string=? op "0001") (sum)]
+    [else (error op "alu")]))
+
+(define (exec-rbus op)
+  (cond
+    [(string=? op "0111") (pmadr)]
+    [else (error op "rbus")]))
+
+(define (exec-other op)
+  (cond
+    [(string=? op "00101") (+2pc)]
+    [else (error op "other")]))
+
+(define (exec-mem op)
+  (cond
+    [(string=? op "00") (none)]
+    [(string=? op "01") (ifch)]
+    [else (error op "memory")]))
+
+(define (f)
+  (let ([op (mir 48 52)])
+    (cond
+      [(string=? op "0000") #t]
+      [else (error op "f")])))
+
+(define (g)
+  (println "g")
+  (let ([ntf (mir 55 56)])
+    (let ([ntf (string=? ntf "1")])
+      (xor ntf (f)))))
+
 (define (step)
   (cond
-    [(state0?) (begin
-                  (set-mir! (microprogram (dec (mar))))
-                  (set-state1!))]))
+    [(= (state) 0) (begin
+                     (set-mir! (microprogram (dec (mar))))
+                     (set-state! 1))]
+    [(= (state) 1) (begin
+                     (let ([opcode (mir 25 29)])
+                       (exec-sbus opcode))
+                     (set-state! 2))]
+    [(= (state) 2) (begin
+                     (let ([opcode (mir 29 33)])
+                       (exec-dbus opcode))
+                     (set-state! 3))]
+    [(= (state) 3) (begin
+                     (let ([opcode (mir 33 37)])
+                       (exec-alu opcode))
+                     (set-state! 4))]
+    [(= (state) 4) (begin
+                     (let ([opcode (mir 37 41)])
+                       (exec-rbus opcode))
+                     (set-state! 5))]
+    [(= (state) 5) (begin
+                     (let ([opcode (mir 41 46)])
+                       (exec-other opcode))
+                     (set-state! 6))]
+    [(= (state) 6) (begin
+                     (let ([opcode (mir 46 48)])
+                       (exec-mem opcode))
+                     (set-state! 7))]
+    [(= (state) 7) (if (g)
+                       (set-state! 8)
+                       (set-state! 9))]
+    [(= (state) 8) (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
+                     ; only for the first row
+                     ; offset (mir 56 64)
+                     (set-mar! new-mar)
+                     (set-state! 0))]
+    [(= (state) 9) (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
+                     (set-mar! new-mar)
+                     (set-state! 0))]))
 
 (define a-cpu (make-cpu))

@@ -13,25 +13,31 @@
                     'column-headers)]
        [columns (list name)]))
 
+(define (load-source-code path)
+  (let ([source (file->lines path)]
+        [assembly (compile-asm-file path)])
+    (create-list source-panel source "Source Code")
+    (create-list source-panel assembly "Assembled Code")
+    (memory-copy (list->vector assembly) 0)))
+
+(define (load-microcode path)
+  (define path-string (path->string path))
+  (define microprogram-bin (file->lines path-string))
+  (define microprogram-text (file->lines (string-replace path-string "bin" "txt")))
+
+  (create-list microcode-panel microprogram-text "Text Microcode")
+  (create-list microcode-panel microprogram-bin "Binary Microcode")
+  (set-microprogram! (list->vector microprogram-bin)))
+
 (define (open-file button event)
   (define path (get-file))
   (when path
-    (let ([source (file->lines path)]
-          [assembly (compile-asm-file path)])
-      (create-list source-panel source "Source Code")
-      (create-list source-panel assembly "Assembled Code")
-      (memory-copy (list->vector assembly) 0))))
+    (load-source-code path)))
 
 (define (open-microcode button event)
   (define path (get-file))
   (when path
-    (define path-string (path->string path))
-    (define microprogram-bin (file->lines path-string))
-    (define microprogram-text (file->lines (string-replace path-string "bin" "txt")))
-
-    (create-list microcode-panel microprogram-text "Text Microcode")
-    (create-list microcode-panel microprogram-bin "Binary Microcode")
-    (set-microprogram! (list->vector microprogram-bin))))
+    (load-microcode path)))
 
 (define frame (new frame% [label "Simelitor"]))
 

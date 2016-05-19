@@ -52,11 +52,12 @@
 (define (strip-whitespace s)
   (regexp-replace* #rx" " s ""))
 
+(define ns (module->namespace "bin.rkt"))
 (define (translate-instruction i)
   (regexp-replace*
    #rx"\\(.*?\\)"
    i
-   (λ (s) (eval (call-with-input-string s read)))))
+   (λ (s) (eval (call-with-input-string s read) ns))))
 
 (define (first-hash i)
   (for/first ([r (hash-keys instructions)]

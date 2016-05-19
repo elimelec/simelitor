@@ -1,7 +1,6 @@
 #lang racket/gui
 
 (require "elisembler.rkt")
-(require "bin.rkt")
 (require "cpu.rkt")
 
 (define (create-list parent choices name)

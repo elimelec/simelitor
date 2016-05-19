@@ -16,8 +16,11 @@
 (define (open-file button event)
   (define path (get-file))
   (when path
-    (create-list source-panel (file->lines path) "Source Code")
-    (create-list source-panel (compile-asm-file path) "Asembled Code")))
+    (let ([source (file->lines path)]
+          [assembly (compile-asm-file path)])
+      (create-list source-panel source "Source Code")
+      (create-list source-panel assembly "Assembled Code")
+      (memory-copy (list->vector assembly) 0))))
 
 (define (open-microcode button event)
   (define path (get-file))

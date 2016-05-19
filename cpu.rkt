@@ -77,8 +77,14 @@
 
 (define (memory address)
   (vector-ref (cpu-memory a-cpu) address))
+(define (memory-range start stop)
+  (vector-copy (cpu-memory a-cpu) start stop))
 (define (set-memory! address value)
   (vector-set! (cpu-memory a-cpu) address value))
+(define (memory-copy list start)
+  (for ([i (vector-length list)]
+        [item list])
+    (set-memory! (+ i start) item)))
 
 (define (microprogram address)
   (vector-ref (cpu-microprogram a-cpu) address))

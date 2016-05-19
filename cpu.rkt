@@ -211,6 +211,40 @@
     (let ([ntf (string=? ntf "1")])
       (xor ntf (f)))))
 
+(define (cl0)
+  (let ([ir15 (string->number (substring (ir) 0 1))]
+        [ir14 (bitwise-bit-field (bitwise-not (dec (ir))) 14 15)])
+    (bitwise-and ir15 (bitwise-not ir14))))
+
+(define (cl1)
+  (let ([ir15 (string->number (substring (ir) 0 1))]
+        [ir13 (string->number (substring (ir) 2 3))])
+    (bitwise-and ir15 ir13)))
+
+(define (cl-bitwise)
+  (println "cl")
+  (let ([cl0 (cl0)]
+        [cl1 (cl1)])
+    (bitwise-ior (arithmetic-shift cl1 1) cl0)))
+
+(define (index1)
+  (println "index1")
+  (let ([op1 (substring (ir) 0 1)]
+        [op2 (substring (ir) 1 3)])
+    (cond
+      [(string=? op1 "0") 0]
+      [(string=? op2 "00") 1]
+      [(string=? op2 "01") 2]
+      [(string=? op2 "11") 3]
+      [else (error (substring (ir) 0 3) "cl")])))
+
+(define (index)
+  (let ([index (mir 52 55)])
+    (match index
+      ["000" 0]
+      ["001" (index1)]
+      [else (error index "index")])))
+
 (define (step)
   (cond
     [(= (state) 0) (begin
@@ -243,11 +277,11 @@
     [(= (state) 7) (if (g)
                        (set-state! 8)
                        (set-state! 9))]
-    [(= (state) 8) (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
-                     ; only for the first row
-                     ; offset (mir 56 64)
-                     (set-mar! new-mar)
-                     (set-state! 0))]
+    [(= (state) 8) (let ([index (index)]
+                         [offset (dec (mir 56 64))])
+                     (let ([new-mar (bin (+ index offset))])
+                       (set-mar! new-mar)
+                       (set-state! 0)))]
     [(= (state) 9) (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
                      (set-mar! new-mar)
                      (set-state! 0))]))

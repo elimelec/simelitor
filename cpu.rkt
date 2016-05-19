@@ -238,11 +238,17 @@
       [(string=? op2 "11") 3]
       [else (error (substring (ir) 0 3) "cl")])))
 
+(define (index2)
+  (println "index2")
+  (let ([op (substring (ir) 4 5)])
+    (string->number op)))
+
 (define (index)
   (let ([index (mir 52 55)])
     (match index
       ["000" 0]
       ["001" (index1)]
+      ["010" (index2)]
       [else (error index "index")])))
 
 (define (step)

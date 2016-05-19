@@ -116,9 +116,17 @@
   (let ([sum (bin (+ (dec (sbus)) (dec (dbus))) 16)])
     (set-rbus! sum)))
 
+(define (pdiroffs)
+  (println "pdiroffs")
+  (set-sbus! (bin (dec (substring (ir) 8 16)))))
+
 (define (pd0s)
   (println "pd0s")
   (set-sbus! (bin 0 16)))
+
+(define (pdiroffd)
+  (println "pdiroffd")
+  (set-dbus! (bin (dec (substring (ir) 8 16)))))
 
 (define (pdpcd)
   (println "pdpcd")
@@ -141,32 +149,45 @@
   (let ([ir (memory (dec (adr)))])
     (set-ir! ir)))
 
+(define (read)
+  (println "read")
+  (set-mdr! (memory (dec (adr)))))
+
+(define (write)
+  (println "write")
+  (set-memory! (dec (adr)) (mdr)))
+
 (define (error op block)
   (let ([error (string-append op " " block " function not yet implemented")])
     (raise error)))
 
 (define (exec-sbus op)
   (cond
+    [(string=? op "0000") (none)]
     [(string=? op "1011") (pd0s)]
     [else (error op "sbus")]))
 
 (define (exec-dbus op)
   (cond
+    [(string=? op "0000") (none)]
     [(string=? op "0110") (pdpcd)]
     [else (error op "dbus")]))
 
 (define (exec-alu op)
   (cond
+    [(string=? op "0000") (none)]
     [(string=? op "0001") (sum)]
     [else (error op "alu")]))
 
 (define (exec-rbus op)
   (cond
+    [(string=? op "0000") (none)]
     [(string=? op "0111") (pmadr)]
     [else (error op "rbus")]))
 
 (define (exec-other op)
   (cond
+    [(string=? op "00000") (none)]
     [(string=? op "00101") (+2pc)]
     [else (error op "other")]))
 
@@ -174,6 +195,8 @@
   (cond
     [(string=? op "00") (none)]
     [(string=? op "01") (ifch)]
+    [(string=? op "10") (read)]
+    [(string=? op "11") (write)]
     [else (error op "memory")]))
 
 (define (f)

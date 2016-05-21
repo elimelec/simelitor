@@ -259,6 +259,7 @@
     ["01101" (a0s)]
     ["01110" (a1s)]
     ["01111" (begin (a0c) (a0v) (a0z) (a0s))]
+    ["10000" (begin (a1c) (a1v) (a1z) (a1s))]
     ["00101" (+2pc)]
     [else (error op "other")]))
 

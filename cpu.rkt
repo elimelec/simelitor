@@ -172,6 +172,7 @@
 (define (exec-sbus op)
   (match op
     ["0000" (none)]
+    ["0001" (pdiroffs)]
     ["0010" (pdflags)]
     ["0011" (pdsps)]
     ["1011" (pd0s)]

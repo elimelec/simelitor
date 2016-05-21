@@ -227,11 +227,16 @@
   (println "pdmdrd")
   (set-dbus! (mdr)))
 
+(define (pd0d)
+  (println "pd0d")
+  (set-dbus! (bin 0)))
+
 (define (exec-dbus op)
   (match op
     ["0000" (none)]
     ["0110" (pdpcd)]
     ["1001" (pdmdrd)]
+    ["1011" (pd0d)]
     [else (error op "dbus")]))
 
 (define (exec-alu op)

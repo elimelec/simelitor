@@ -210,9 +210,19 @@
     ["0111" (pmadr)]
     [else (error op "rbus")]))
 
+(define (string-replace-index string index value)
+    (let ([v (list->vector (string->list string))])
+      (vector-set! v index value)
+      (list->string (vector->list v))))
+
+(define (a1c)
+  (println "a1c")
+  (set-flag! (string-replace-index (flag) 2 #\1)))
+
 (define (exec-other op)
   (match op
     ["00000" (none)]
+    ["01000" (a1c)]
     ["00101" (+2pc)]
     [else (error op "other")]))
 

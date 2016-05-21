@@ -161,9 +161,14 @@
   (let ([error (string-append op " " block " function not yet implemented")])
     (raise error)))
 
+(define (pdflags)
+  (println "pdflags")
+  (set-sbus! (flag)))
+
 (define (exec-sbus op)
   (match op
     ["0000" (none)]
+    ["0010" (pdflags)]
     ["1011" (pd0s)]
     [else (error op "sbus")]))
 

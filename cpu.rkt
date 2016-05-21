@@ -244,6 +244,10 @@
   (println "ad")
   (if (string=? (substring (flag) 6 7) "1") #t #f))
 
+(define (aclow)
+  (println "aclow")
+  (if (string=? (substring (flag) 7 8) "1") #t #f))
+
 (define (f)
   (let ([op (mir 48 52)])
     (match op
@@ -254,6 +258,7 @@
       ["0100" (s)]
       ["0101" (v)]
       ["0110" (ad)]
+      ["0111" (aclow)]
       [else (error op "f")])))
 
 (define (g)

@@ -4,6 +4,10 @@
 (require "cpu.rkt")
 (require "bin.rkt")
 
+(define (repeat f count)
+  (for ([i (in-range count)])
+    (f)))
+
 (define (create-list parent choices name)
   (new list-box%
        [label #f]
@@ -66,6 +70,11 @@
                          [parent buttons-panel]
                          [label "Step"]
                          [callback (lambda (button event) (step))]))
+
+(define step-i-button (new button%
+                           [parent buttons-panel]
+                           [label "Step Instruction"]
+                           [callback (lambda (button event) (repeat step 9))]))
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]

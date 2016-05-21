@@ -2,6 +2,7 @@
 
 (require "elisembler.rkt")
 (require "cpu.rkt")
+(require "bin.rkt")
 
 (define (create-list parent choices name)
   (new list-box%

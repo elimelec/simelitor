@@ -239,6 +239,10 @@
   (println "a1z")
   (set-flag! (string-replace-index (flag) 3 #\1)))
 
+(define (a0s)
+  (println "a0s")
+  (set-flag! (string-replace-index (flag) 4 #\0)))
+
 (define (exec-other op)
   (match op
     ["00000" (none)]
@@ -248,6 +252,7 @@
     ["01010" (a1v)]
     ["01011" (a0z)]
     ["01100" (a1z)]
+    ["01101" (a0s)]
     ["00101" (+2pc)]
     [else (error op "other")]))
 

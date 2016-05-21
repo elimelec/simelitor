@@ -177,6 +177,10 @@
   (println "pdnotts")
   (set-sbus! (bitstring-not (t))))
 
+(define (pdpcs)
+  (println "pdpcs")
+  (set-sbus! (pc)))
+
 (define (exec-sbus op)
   (match op
     ["0000" (none)]
@@ -185,6 +189,7 @@
     ["0011" (pdsps)]
     ["0100" (pdts)]
     ["0101" (pdnotts)]
+    ["0110" (pdpcs)]
     ["1011" (pd0s)]
     [else (error op "sbus")]))
 

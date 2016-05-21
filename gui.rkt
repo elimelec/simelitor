@@ -76,6 +76,11 @@
                            [label "Step Instruction"]
                            [callback (lambda (button event) (repeat step 9))]))
 
+(define run-button (new button%
+                        [parent buttons-panel]
+                        [label "Run"]
+                        [callback (lambda (button event) (repeat step 3000))]))
+
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]
          [text (send text-field get-value)]

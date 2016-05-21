@@ -224,11 +224,16 @@
     ["11" (write)]
     [else (error op "memory")]))
 
+(define (c)
+  (println "c")
+  (if (string=? (substring (flag) 2 3) "1") #t #f))
+
 (define (f)
   (let ([op (mir 48 52)])
     (match op
       ["0000" #t]
       ["0001" #f]
+      ["0010" (c)]
       [else (error op "f")])))
 
 (define (g)

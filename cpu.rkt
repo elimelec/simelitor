@@ -184,9 +184,14 @@
     ["0001" (sum)]
     [else (error op "alu")]))
 
+(define (pmt)
+  (println "pmt")
+  (set-t! (rbus)))
+
 (define (exec-rbus op)
   (match op
     ["0000" (none)]
+    ["0100" (pmt)]
     ["0111" (pmadr)]
     [else (error op "rbus")]))
 

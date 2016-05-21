@@ -162,47 +162,47 @@
     (raise error)))
 
 (define (exec-sbus op)
-  (cond
-    [(string=? op "0000") (none)]
-    [(string=? op "1011") (pd0s)]
+  (match op
+    ["0000" (none)]
+    ["1011" (pd0s)]
     [else (error op "sbus")]))
 
 (define (exec-dbus op)
-  (cond
-    [(string=? op "0000") (none)]
-    [(string=? op "0110") (pdpcd)]
+  (match op
+    ["0000" (none)]
+    ["0110" (pdpcd)]
     [else (error op "dbus")]))
 
 (define (exec-alu op)
-  (cond
-    [(string=? op "0000") (none)]
-    [(string=? op "0001") (sum)]
+  (match op
+    ["0000" (none)]
+    ["0001" (sum)]
     [else (error op "alu")]))
 
 (define (exec-rbus op)
-  (cond
-    [(string=? op "0000") (none)]
-    [(string=? op "0111") (pmadr)]
+  (match op
+    ["0000" (none)]
+    ["0111" (pmadr)]
     [else (error op "rbus")]))
 
 (define (exec-other op)
-  (cond
-    [(string=? op "00000") (none)]
-    [(string=? op "00101") (+2pc)]
+  (match op
+    ["00000" (none)]
+    ["00101" (+2pc)]
     [else (error op "other")]))
 
 (define (exec-mem op)
-  (cond
-    [(string=? op "00") (none)]
-    [(string=? op "01") (ifch)]
-    [(string=? op "10") (read)]
-    [(string=? op "11") (write)]
+  (match op
+    ["00" (none)]
+    ["01" (ifch)]
+    ["10" (read)]
+    ["11" (write)]
     [else (error op "memory")]))
 
 (define (f)
   (let ([op (mir 48 52)])
-    (cond
-      [(string=? op "0000") #t]
+    (match op
+      ["0000" #t]
       [else (error op "f")])))
 
 (define (g)
@@ -258,44 +258,44 @@
       [else (error index "index")])))
 
 (define (step)
-  (cond
-    [(= (state) 0) (begin
-                     (set-mir! (microprogram (dec (mar))))
-                     (set-state! 1))]
-    [(= (state) 1) (begin
-                     (let ([opcode (mir 25 29)])
-                       (exec-sbus opcode))
-                     (set-state! 2))]
-    [(= (state) 2) (begin
-                     (let ([opcode (mir 29 33)])
-                       (exec-dbus opcode))
-                     (set-state! 3))]
-    [(= (state) 3) (begin
-                     (let ([opcode (mir 33 37)])
-                       (exec-alu opcode))
-                     (set-state! 4))]
-    [(= (state) 4) (begin
-                     (let ([opcode (mir 37 41)])
-                       (exec-rbus opcode))
-                     (set-state! 5))]
-    [(= (state) 5) (begin
-                     (let ([opcode (mir 41 46)])
-                       (exec-other opcode))
-                     (set-state! 6))]
-    [(= (state) 6) (begin
-                     (let ([opcode (mir 46 48)])
-                       (exec-mem opcode))
-                     (set-state! 7))]
-    [(= (state) 7) (if (g)
-                       (set-state! 8)
-                       (set-state! 9))]
-    [(= (state) 8) (let ([index (index)]
-                         [offset (dec (mir 56 64))])
-                     (let ([new-mar (bin (+ index offset))])
-                       (set-mar! new-mar)
-                       (set-state! 0)))]
-    [(= (state) 9) (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
-                     (set-mar! new-mar)
-                     (set-state! 0))]))
+  (match (state)
+    [0 (begin
+         (set-mir! (microprogram (dec (mar))))
+         (set-state! 1))]
+    [1 (begin
+         (let ([opcode (mir 25 29)])
+           (exec-sbus opcode))
+         (set-state! 2))]
+    [2 (begin
+         (let ([opcode (mir 29 33)])
+           (exec-dbus opcode))
+         (set-state! 3))]
+    [3 (begin
+         (let ([opcode (mir 33 37)])
+           (exec-alu opcode))
+         (set-state! 4))]
+    [4 (begin
+         (let ([opcode (mir 37 41)])
+           (exec-rbus opcode))
+         (set-state! 5))]
+    [5 (begin
+         (let ([opcode (mir 41 46)])
+           (exec-other opcode))
+         (set-state! 6))]
+    [6 (begin
+         (let ([opcode (mir 46 48)])
+           (exec-mem opcode))
+         (set-state! 7))]
+    [7 (if (g)
+           (set-state! 8)
+           (set-state! 9))]
+    [8 (let ([index (index)]
+             [offset (dec (mir 56 64))])
+         (let ([new-mar (bin (+ index offset))])
+           (set-mar! new-mar)
+           (set-state! 0)))]
+    [9 (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
+         (set-mar! new-mar)
+         (set-state! 0))]))
 
 (define a-cpu (make-cpu))

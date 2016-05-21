@@ -165,10 +165,15 @@
   (println "pdflags")
   (set-sbus! (flag)))
 
+(define (pdsps)
+  (println "pdsps")
+  (set-sbus! (sp)))
+
 (define (exec-sbus op)
   (match op
     ["0000" (none)]
     ["0010" (pdflags)]
+    ["0011" (pdsps)]
     ["1011" (pd0s)]
     [else (error op "sbus")]))
 

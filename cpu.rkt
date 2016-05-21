@@ -197,6 +197,10 @@
   (println "pdrgs")
   (set-sbus! (register (dec (substring (ir) 6 10)))))
 
+(define (pd-1s)
+  (println "pd-1s")
+  (set-sbus! (bitstring-not (bin 0))))
+
 (define (exec-sbus op)
   (match op
     ["0000" (none)]
@@ -211,6 +215,7 @@
     ["1001" (pdmdrs)]
     ["1010" (pdrgs)]
     ["1011" (pd0s)]
+    ["1100" (pd-1s)]
     [else (error op "sbus")]))
 
 (define (pdmdrd)

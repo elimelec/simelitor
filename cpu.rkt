@@ -185,6 +185,10 @@
   (println "pdivrs")
   (set-sbus! (ivr)))
 
+(define (pdadrs)
+  (println "pdadrs")
+  (set-sbus! (adr)))
+
 (define (exec-sbus op)
   (match op
     ["0000" (none)]
@@ -195,6 +199,7 @@
     ["0101" (pdnotts)]
     ["0110" (pdpcs)]
     ["0111" (pdivrs)]
+    ["1000" (pdadrs)]
     ["1011" (pd0s)]
     [else (error op "sbus")]))
 

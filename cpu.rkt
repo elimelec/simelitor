@@ -253,12 +253,17 @@
   (println "pmt")
   (set-t! (rbus)))
 
+(define (pmmdr)
+  (println "pmmdr")
+  (set-mdr! (rbus)))
+
 (define (exec-rbus op)
   (match op
     ["0000" (none)]
     ["0010" (pmrg)]
     ["0100" (pmt)]
     ["0111" (pmadr)]
+    ["1000" (pmmdr)]
     [else (error op "rbus")]))
 
 (define (string-replace-index string index value)

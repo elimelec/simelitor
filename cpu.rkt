@@ -250,12 +250,12 @@
 
 (define (index2)
   (println "index2")
-  (let ([op (substring (ir) 4 5)])
+  (let ([op (substring (ir) 4 6)])
     (string->number op)))
 
 (define (index3)
   (println "index3")
-  (let ([op (substring (ir) 10 11)])
+  (let ([op (substring (ir) 10 12)])
     (string->number op)))
 
 (define (index)

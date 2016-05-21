@@ -228,6 +228,7 @@
   (let ([op (mir 48 52)])
     (match op
       ["0000" #t]
+      ["0001" #f]
       [else (error op "f")])))
 
 (define (g)

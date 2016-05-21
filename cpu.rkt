@@ -167,10 +167,15 @@
     ["1011" (pd0s)]
     [else (error op "sbus")]))
 
+(define (pdmdrd)
+  (println "pdmdrd")
+  (set-dbus! (mdr)))
+
 (define (exec-dbus op)
   (match op
     ["0000" (none)]
     ["0110" (pdpcd)]
+    ["1001" (pdmdrd)]
     [else (error op "dbus")]))
 
 (define (exec-alu op)

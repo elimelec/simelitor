@@ -11,6 +11,9 @@
 (define-syntax-rule (while test body ...)
   (let loop () (when test body ... (loop))))
 
+(define (repeat-until test f)
+  (while test (f)))
+
 (define (create-list parent choices name)
   (new list-box%
        [label #f]

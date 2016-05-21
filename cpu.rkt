@@ -228,12 +228,17 @@
   (println "c")
   (if (string=? (substring (flag) 2 3) "1") #t #f))
 
+(define (z)
+  (println "z")
+  (if (string=? (substring (flag) 3 4) "1") #t #f))
+
 (define (f)
   (let ([op (mir 48 52)])
     (match op
       ["0000" #t]
       ["0001" #f]
       ["0010" (c)]
+      ["0011" (z)]
       [else (error op "f")])))
 
 (define (g)

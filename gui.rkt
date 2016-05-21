@@ -8,6 +8,9 @@
   (for ([i (in-range count)])
     (f)))
 
+(define-syntax-rule (while test body ...)
+  (let loop () (when test body ... (loop))))
+
 (define (create-list parent choices name)
   (new list-box%
        [label #f]

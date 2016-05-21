@@ -248,6 +248,10 @@
   (println "aclow")
   (if (string=? (substring (flag) 7 8) "1") #t #f))
 
+(define (cil)
+  (println "cil")
+  (if (string=? (substring (flag) 8 9) "1") #t #f))
+
 (define (f)
   (let ([op (mir 48 52)])
     (match op
@@ -259,6 +263,7 @@
       ["0101" (v)]
       ["0110" (ad)]
       ["0111" (aclow)]
+      ["1000" (cil)]
       [else (error op "f")])))
 
 (define (g)

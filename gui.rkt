@@ -115,3 +115,5 @@
                          [callback (lambda (button event) (eval-asm))]))
 
 (send frame show #t)
+(load-source-code (string->path "test.s"))
+(load-microcode (string->path "microprogram.bin"))

@@ -14,6 +14,9 @@
 (define (repeat-until test f)
   (while test (f)))
 
+(define (perform-step)
+  (step))
+
 (define (create-list parent choices name)
   (new list-box%
        [label #f]
@@ -75,17 +78,17 @@
 (define step-button (new button%
                          [parent buttons-panel]
                          [label "Step"]
-                         [callback (lambda (button event) (step))]))
+                         [callback (lambda (button event) (perform-step))]))
 
 (define step-i-button (new button%
                            [parent buttons-panel]
                            [label "Step Instruction"]
-                           [callback (lambda (button event) (repeat step 9))]))
+                           [callback (lambda (button event) (repeat perform-step 9))]))
 
 (define run-button (new button%
                         [parent buttons-panel]
                         [label "Run"]
-                        [callback (lambda (button event) (repeat step 3000))]))
+                        [callback (lambda (button event) (repeat perform-step 3000))]))
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]

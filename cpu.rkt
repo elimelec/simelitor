@@ -18,6 +18,8 @@
        (make-vector 138 (bin 0 64)) 0
        zero zero zero))
 
+(define (registers)
+  (cpu-registers a-cpu))
 (define (register n)
   (vector-ref (cpu-registers a-cpu) n))
 (define (set-register! n value)

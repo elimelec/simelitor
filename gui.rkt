@@ -14,8 +14,10 @@
 (define (repeat-until test f)
   (while test (f)))
 
-(define (perform-step)
-  (step))
+(define perform-step
+  (lambda ([update-gui #f])
+    (step)
+    (when update-gui (update-lists))))
 
 (define (registers-list-values)
   (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
@@ -24,6 +26,11 @@
   (list "flag" "sp" "t" "pc" "ivr" "adr" "ir"
         "mar" "mir" "state" "sbus" "dbus" "rbus"))
 
+(define (update-lists)
+  (send registers-list set (vector->list (registers)))
+  (send memory-list set (vector->list (memory-range 0 65536)))
+  (send cpu-registers-list-names set (registers-list-names))
+  (send cpu-registers-list-values set (registers-list-values)))
 
 (define (create-list parent choices name)
   (new list-box%
@@ -96,17 +103,21 @@
 (define step-button (new button%
                          [parent buttons-panel]
                          [label "Step"]
-                         [callback (lambda (button event) (perform-step))]))
+                         [callback (lambda (button event) (perform-step #t))]))
 
 (define step-i-button (new button%
                            [parent buttons-panel]
                            [label "Step Instruction"]
-                           [callback (lambda (button event) (repeat perform-step 9))]))
+                           [callback (lambda (button event)
+                                       (repeat perform-step 8)
+                                       (perform-step #t))]))
 
 (define run-button (new button%
                         [parent buttons-panel]
                         [label "Run"]
-                        [callback (lambda (button event) (repeat perform-step 3000))]))
+                        [callback (lambda (button event)
+                                    (repeat perform-step 3000)
+                                    (perform-step #t))]))
 
 (define registers-list (create-list
                         rigth-panel
@@ -144,7 +155,8 @@
   (define input (send eval-input get-value))
   (define code (compile-asm (list input)))
   (send (send eval-input get-editor) erase)
-  (set-memory! 0 (first code)))
+  (set-memory! 0 (first code))
+  (update-lists))
 (define eval-input (new text-field%
                         [label "Code"]
                         [parent eval-panel]
@@ -157,3 +169,4 @@
 (send frame show #t)
 (load-source-code (string->path "test.s"))
 (load-microcode (string->path "microprogram.bin"))
+(update-lists)

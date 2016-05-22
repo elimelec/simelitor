@@ -17,6 +17,14 @@
 (define (perform-step)
   (step))
 
+(define (registers-list-values)
+  (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
+        (mar) (mir) (number->string (state)) (sbus) (dbus) (rbus)))
+(define (registers-list-names)
+  (list "flag" "sp" "t" "pc" "ivr" "adr" "ir"
+        "mar" "mir" "state" "sbus" "dbus" "rbus"))
+
+
 (define (create-list parent choices name)
   (new list-box%
        [label #f]
@@ -99,6 +107,28 @@
                         [parent buttons-panel]
                         [label "Run"]
                         [callback (lambda (button event) (repeat perform-step 3000))]))
+
+(define registers-list (create-list
+                        rigth-panel
+                        (vector->list (registers))
+                        "Registers"))
+
+(define memory-list (create-list
+                     rigth-panel
+                     (vector->list (memory-range 0 65536))
+                     "Memory"))
+
+(define registers-panel (new horizontal-panel%
+                        [parent rigth-panel]
+                        [style (list 'border)]))
+(define cpu-registers-list-names (create-list
+                              registers-panel
+                              (registers-list-names)
+                              "Registers"))
+(define cpu-registers-list-values (create-list
+                               registers-panel
+                               (registers-list-values)
+                               "Values"))
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]

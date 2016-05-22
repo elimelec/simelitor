@@ -23,7 +23,7 @@ ret
 reti
 halt
 wait
-push pc
-pop pc
-push flag
-pop flag
+push-pc
+pop-pc
+push-flag
+pop-flag

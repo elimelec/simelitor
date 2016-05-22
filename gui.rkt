@@ -54,17 +54,27 @@
 
 (define frame (new frame% [label "Simelitor"]))
 
+(define root-panel (new horizontal-panel%
+                        [parent frame]
+                        [style (list 'border)]))
+(define left-panel (new vertical-panel%
+                        [parent root-panel]
+                        [style (list 'border)]))
+(define rigth-panel (new vertical-panel%
+                         [parent root-panel]
+                         [style (list 'border)]))
+
 (define buttons-panel (new horizontal-panel%
-                           [parent frame]
+                           [parent left-panel]
                            [style (list 'border)]))
 (define source-panel (new horizontal-panel%
-                          [parent frame]
+                          [parent left-panel]
                           [style (list 'border)]))
 (define microcode-panel (new horizontal-panel%
-                             [parent frame]
+                             [parent left-panel]
                              [style (list 'border)]))
 (define eval-panel (new horizontal-panel%
-                        [parent frame]
+                        [parent left-panel]
                         [style (list 'border)]))
 
 (define open-source-button (new button%

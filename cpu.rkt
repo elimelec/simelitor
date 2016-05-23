@@ -225,6 +225,10 @@
     ["1101" (pd1s)]
     [else (error op "sbus")]))
 
+(define (pdnottd)
+  (println "pdnottd")
+  (set-dbus! (bitstring-not (t))))
+
 (define (pdmdrd)
   (println "pdmdrd")
   (set-dbus! (mdr)))
@@ -248,6 +252,7 @@
 (define (exec-dbus op)
   (match op
     ["0000" (none)]
+    ["0101" (pdnottd)]
     ["0110" (pdpcd)]
     ["0111" (pdivrd)]
     ["1000" (pdadrd)]

@@ -405,7 +405,7 @@
 
 (define (ad)
   (println "ad")
-  (if (string=? (substring (flag) 6 7) "1") #t #f))
+  (if (string=? (substring (ir) 10 12) "01") #t #f))
 
 (define (aclow)
   (println "aclow")

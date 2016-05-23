@@ -264,6 +264,7 @@
 (define (exec-dbus op)
   (match op
     ["0000" (none)]
+    ["0001" (pdiroffd)]
     ["0010" (pdflagd)]
     ["0011" (pdspd)]
     ["0100" (pdtd)]

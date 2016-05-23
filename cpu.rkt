@@ -352,6 +352,8 @@
 (define (exec-other op)
   (match op
     ["00000" (none)]
+    ["00001" (begin (println "pdcond not implemented"))]
+    ["00010" (begin (println "cinpdcond not implemented"))]
     ["00101" (+2pc)]
     ["00111" (a0c)]
     ["01000" (a1c)]

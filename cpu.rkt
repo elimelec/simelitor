@@ -422,27 +422,27 @@
 (define (index3)
   (println "index3")
   (let ([op (substring (ir) 10 12)])
-    (string->number op 2)))
+    (* (string->number op 2) 2)))
 
 (define (index4)
   (println "index4")
   (let ([op (substring (ir) 1 4)])
-    (string->number op 2)))
+    (* (string->number op 2) 2)))
 
 (define (index5)
   (println "index5")
   (let ([op (substring (ir) 3 7)])
-    (string->number op 2)))
+    (* (string->number op 2) 2)))
 
 (define (index6)
   (println "index6")
   (let ([op (substring (ir) 3 7)])
-    (string->number op 2)))
+    (* (string->number op 2) 2)))
 
 (define (index7)
   (println "index7")
   (let ([op (substring (ir) 3 8)])
-    (string->number op 2)))
+    (* (string->number op 2) 2)))
 
 (define (index)
   (let ([index (mir 52 55)])

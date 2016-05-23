@@ -225,6 +225,10 @@
     ["1101" (pd1s)]
     [else (error op "sbus")]))
 
+(define (pdflagd)
+  (println "pdflagd")
+  (set-dbus! (flag)))
+
 (define (pdspd)
   (println "pdspd")
   (set-dbus! (sp)))
@@ -260,6 +264,7 @@
 (define (exec-dbus op)
   (match op
     ["0000" (none)]
+    ["0010" (pdflagd)]
     ["0011" (pdspd)]
     ["0100" (pdtd)]
     ["0101" (pdnottd)]

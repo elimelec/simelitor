@@ -30,7 +30,11 @@
   (send registers-list set (vector->list (registers)))
   (send memory-list set (vector->list (memory-range 0 65536)))
   (send cpu-registers-list-names set (registers-list-names))
-  (send cpu-registers-list-values set (registers-list-values)))
+  (send cpu-registers-list-values set (registers-list-values))
+  (send source-code-list select (dec (pc)))
+  (send source-code-assembled select (dec (pc)))
+  (send microprogram-text-list select (dec (mar)))
+  (send microprogram-bin-list select (dec (mar))))
 
 (define (create-list parent choices name)
   (new list-box%

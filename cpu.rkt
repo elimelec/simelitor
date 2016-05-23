@@ -309,6 +309,14 @@
       (vector-set! v index value)
       (list->string (vector->list v))))
 
+(define (+2sp)
+  (println "+2sp")
+  (set-sp! (bin (+ (dec (sp)) 1))))
+
+(define (-2sp)
+  (println "-2sp")
+  (set-sp! (bin (- (dec (sp)) 1))))
+
 (define (a0c)
   (println "a0c")
   (set-flag! (string-replace-index (flag) 2 #\0)))
@@ -354,6 +362,8 @@
     ["00000" (none)]
     ["00001" (begin (println "pdcond not implemented"))]
     ["00010" (begin (println "cinpdcond not implemented"))]
+    ["00011" (+2sp)]
+    ["00100" (-2sp)]
     ["00101" (+2pc)]
     ["00111" (a0c)]
     ["01000" (a1c)]

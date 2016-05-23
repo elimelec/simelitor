@@ -229,6 +229,10 @@
   (println "pdmdrd")
   (set-dbus! (mdr)))
 
+(define (pdadrd)
+  (println "pdadrd")
+  (set-dbus! (adr)))
+
 (define (pdrgd)
   (println "pdrgd")
   (set-dbus! (register (dec (substring (ir) 6 10)))))
@@ -241,6 +245,7 @@
   (match op
     ["0000" (none)]
     ["0110" (pdpcd)]
+    ["1000" (pdadrd)]
     ["1001" (pdmdrd)]
     ["1010" (pdrgd)]
     ["1011" (pd0d)]

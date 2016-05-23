@@ -465,7 +465,7 @@
 (define (index2)
   (println "index2")
   (let ([op (substring (ir) 4 6)])
-    (string->number op 2)))
+    (* (string->number op 2) 2)))
 
 (define (index3)
   (println "index3")

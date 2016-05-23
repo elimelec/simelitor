@@ -140,7 +140,7 @@
 
 (define (+2pc)
   (println "+2pc")
-  (let ([new-pc (bin (+ (dec (pc)) 2) 16)])
+  (let ([new-pc (bin (+ (dec (pc)) 1) 16)])
     (set-pc! new-pc)))
 
 (define (none)

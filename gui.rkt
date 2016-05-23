@@ -41,20 +41,24 @@
                     'column-headers)]
        [columns (list name)]))
 
+(define source-code-list #f)
+(define source-code-assembled #f)
 (define (load-source-code path)
   (let ([source (file->lines path)]
         [assembly (compile-asm-file path)])
-    (create-list source-panel source "Source Code")
-    (create-list source-panel assembly "Assembled Code")
+    (set! source-code-list (create-list source-panel source "Source Code"))
+    (set! source-code-assembled (create-list source-panel assembly "Assembled Code"))
     (memory-copy (list->vector assembly) 0)))
 
+(define microprogram-bin-list #f)
+(define microprogram-text-list #f)
 (define (load-microcode path)
   (define path-string (path->string path))
   (define microprogram-bin (file->lines path-string))
   (define microprogram-text (file->lines (string-replace path-string "bin" "txt")))
 
-  (create-list microcode-panel microprogram-text "Text Microcode")
-  (create-list microcode-panel microprogram-bin "Binary Microcode")
+  (set! microprogram-text-list (create-list microcode-panel microprogram-text "Text Microcode"))
+  (set! microprogram-bin-list (create-list microcode-panel microprogram-bin "Binary Microcode"))
   (set-microprogram! (list->vector microprogram-bin)))
 
 (define (open-file button event)

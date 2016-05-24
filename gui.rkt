@@ -139,7 +139,7 @@
 
 (define step-i-button (new button%
                            [parent buttons-panel]
-                           [label "Step Instruction"]
+                           [label "Step Micro Instruction"]
                            [callback (lambda (button event)
                                        (repeat perform-step 8)
                                        (perform-step #t))]))

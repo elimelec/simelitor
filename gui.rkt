@@ -126,64 +126,66 @@
                         [parent left-panel]
                         [style (list 'border)]))
 
-(define open-source-button (new button%
-                                [parent buttons-panel]
-                                [label "Open Source"]
-                                [callback open-file]))
-(define open-microcode-button (new button%
-                                   [parent buttons-panel]
-                                   [label "Open Microcode"]
-                                   [callback open-microcode]))
-(define step-button (new button%
-                         [parent buttons-panel]
-                         [label "Step"]
-                         [callback (lambda (button event) (perform-step #t))]))
+(new button%
+     [parent buttons-panel]
+     [label "Open Source"]
+     [callback open-file])
 
-(define step-mi-button (new button%
-                            [parent buttons-panel]
-                            [label "Step Micro Instruction"]
-                            [callback (lambda (button event)
-                                        (repeat perform-step 8)
-                                        (perform-step #t))]))
+(new button%
+     [parent buttons-panel]
+     [label "Open Microcode"]
+     [callback open-microcode])
 
-(define step-i-button (new button%
-                           [parent buttons-panel]
-                           [label "Step Instruction"]
-                           [callback (lambda (button event)
-                                       (repeat perform-step 9)
-                                       (while (not (= (dec (mar)) 0))
-                                              (perform-step))
-                                       (save-cpu)
-                                       (update-lists))]))
+(new button%
+     [parent buttons-panel]
+     [label "Step"]
+     [callback (lambda (button event) (perform-step #t))])
 
-(define run-button (new button%
-                        [parent buttons-panel]
-                        [label "Run"]
-                        [callback (lambda (button event)
-                                    (while (let ([pc (dec (pc))])
-                                             (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (andmap positive? _)))
-                                           (perform-step))
-                                    (save-cpu)
-                                    (update-lists))]))
+(new button%
+     [parent buttons-panel]
+     [label "Step Micro Instruction"]
+     [callback (lambda (button event)
+                 (repeat perform-step 8)
+                 (perform-step #t))])
 
-(define back-button (new button%
-                         [parent buttons-panel]
-                         [label "Back"]
-                         [callback (lambda (button event)
-                                     (restore-cpu)
-                                     (update-lists))]))
+(new button%
+     [parent buttons-panel]
+     [label "Step Instruction"]
+     [callback (lambda (button event)
+                 (repeat perform-step 9)
+                 (while (not (= (dec (mar)) 0))
+                        (perform-step))
+                 (save-cpu)
+                 (update-lists))])
 
-(define push-button (new button%
-                         [parent buttons-panel]
-                         [label "Push"]
-                         [callback (lambda (button event) (push-cpu))]))
+(new button%
+     [parent buttons-panel]
+     [label "Run"]
+     [callback (lambda (button event)
+                 (while (let ([pc (dec (pc))])
+                          (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (andmap positive? _)))
+                        (perform-step))
+                 (save-cpu)
+                 (update-lists))])
 
-(define pop-button (new button%
-                         [parent buttons-panel]
-                         [label "Pop"]
-                         [callback (lambda (button event)
-                                     (pop-cpu)
-                                     (update-lists))]))
+(new button%
+     [parent buttons-panel]
+     [label "Back"]
+     [callback (lambda (button event)
+                 (restore-cpu)
+                 (update-lists))])
+
+(new button%
+     [parent buttons-panel]
+     [label "Push"]
+     [callback (lambda (button event) (push-cpu))])
+
+(new button%
+     [parent buttons-panel]
+     [label "Pop"]
+     [callback (lambda (button event)
+                 (pop-cpu)
+                 (update-lists))])
 
 (define registers-list (create-list
                         rigth-panel

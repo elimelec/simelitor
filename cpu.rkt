@@ -233,7 +233,7 @@
   (set-dbus! (adr)))
 
 (define (pdrgd)
-  (set-dbus! (register (dec (substring (ir) 6 10)))))
+  (set-dbus! (register (dec (substring (ir) 12 16)))))
 
 (define (pd0d)
   (set-dbus! (sbin 0)))

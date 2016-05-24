@@ -283,6 +283,10 @@
     ["0001" (sum)]
     [else (error op "alu")]))
 
+(define (pmflag)
+  (println "pmflag")
+  (set-flag! (rbus)))
+
 (define (pmrg)
   (println "pmrg")
   (set-register! (dec (substring (ir) 12 16)) (rbus)))
@@ -298,6 +302,7 @@
 (define (exec-rbus op)
   (match op
     ["0000" (none)]
+    ["0001" (pmflag)]
     ["0010" (pmrg)]
     ["0100" (pmt)]
     ["0111" (pmadr)]

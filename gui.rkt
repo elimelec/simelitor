@@ -156,6 +156,18 @@
                                      (restore-cpu)
                                      (update-lists))]))
 
+(define push-button (new button%
+                         [parent buttons-panel]
+                         [label "Push"]
+                         [callback (lambda (button event) (push-cpu))]))
+
+(define pop-button (new button%
+                         [parent buttons-panel]
+                         [label "Pop"]
+                         [callback (lambda (button event)
+                                     (pop-cpu)
+                                     (update-lists))]))
+
 (define registers-list (create-list
                         rigth-panel
                         (vector->list (registers))

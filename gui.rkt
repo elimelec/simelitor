@@ -1,6 +1,7 @@
 #lang racket/gui
 
 (require threading)
+(require (only-in racket/base (read racket-read)))
 
 (require "elisembler.rkt")
 (require "cpu.rkt")
@@ -125,6 +126,9 @@
 (define eval-panel (new horizontal-panel%
                         [parent left-panel]
                         [style (list 'border)]))
+(define eval-command-panel (new horizontal-panel%
+                                [parent left-panel]
+                                [style (list 'border)]))
 
 (new button%
      [parent buttons-panel]
@@ -233,6 +237,29 @@
                          [parent eval-panel]
                          [label "Eval"]
                          [callback (lambda (button event) (eval-asm))]))
+
+
+
+(define (eval-command-input-changed text-field event)
+  (let ([event (send event get-event-type)]
+        [text (send text-field get-value)])
+    (when (eq? event 'text-field-enter)
+      (eval-command text)
+      (send (send text-field get-editor) erase))))
+
+(define (eval-command command)
+  (let ([command (string-append "(" command ")")])
+    (let ([result (eval (call-with-input-string command racket-read))])
+      (println result))))
+
+(define eval-command-input (new text-field%
+                                [label "Command"]
+                                [parent eval-panel]
+                                [callback eval-command-input-changed]))
+(define eval-command-button (new button%
+                                 [parent eval-panel]
+                                 [label "Eval Command"]
+                                 [callback (lambda (button event) (eval-asm))]))
 
 (send frame show #t)
 (load-source-code (string->path "test.s"))

@@ -299,6 +299,10 @@
   (println "pmpc")
   (set-pc! (rbus)))
 
+(define (pmivr)
+  (println "pmivr")
+  (set-ivr! (rbus)))
+
 (define (pmt)
   (println "pmt")
   (set-t! (rbus)))
@@ -315,6 +319,7 @@
     ["0011" (pmsp)]
     ["0100" (pmt)]
     ["0101" (pmpc)]
+    ["0110" (pmivr)]
     ["0111" (pmadr)]
     ["1000" (pmmdr)]
     [else (error op "rbus")]))

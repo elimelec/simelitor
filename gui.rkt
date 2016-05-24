@@ -39,7 +39,7 @@
 (define perform-step
   (lambda ([update-gui #f])
     (step)
-    (when update-gui (save-cpu) (update-lists))))
+    (when update-gui (update-lists))))
 
 (define (registers-list-values)
   (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
@@ -154,12 +154,13 @@
 (new button%
      [parent buttons-panel]
      [label "Step"]
-     [callback (lambda (button event) (perform-step #t))])
+     [callback (lambda (button event) (save-cpu) (perform-step #t))])
 
 (new button%
      [parent buttons-panel]
      [label "Step Micro Instruction"]
      [callback (lambda (button event)
+                 (save-cpu)
                  (repeat perform-step 8)
                  (perform-step #t))])
 
@@ -167,20 +168,20 @@
      [parent buttons-panel]
      [label "Step Instruction"]
      [callback (lambda (button event)
+                 (save-cpu)
                  (repeat perform-step 9)
                  (while (not (= (dec (mar)) 0))
                         (perform-step))
-                 (save-cpu)
                  (update-lists))])
 
 (new button%
      [parent buttons-panel]
      [label "Run"]
      [callback (lambda (button event)
+                 (save-cpu)
                  (while (let ([pc (dec (pc))])
                           (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (andmap positive? _)))
                         (perform-step))
-                 (save-cpu)
                  (update-lists))])
 
 (new button%

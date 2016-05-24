@@ -75,7 +75,17 @@
 (define source-code-list #f)
 (define source-code-assembled #f)
 (define (load-source-code path)
-  (let ([source (file->lines path)]
+  (let ([source (let ([source (file->lines "test.s")])
+                  (let ([ls (~> source
+                                (map (lambda (i) (compile-asm (list i))) _)
+                                (map length _))])
+                    (flatten (for/list ([instr source]
+                                        [l ls])
+                               (match l
+                                 [1 (list instr)]
+                                 [2 (list instr "")]
+                                 [3 (list instr "" "")]
+                                 [4 (list instr "" "" "")])))))]
         [assembly (compile-asm-file path)])
     (set! source-code-list (create-list source-panel source "Source Code"))
     (set! source-code-assembled (create-list source-panel assembly "Assembled Code"))

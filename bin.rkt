@@ -43,3 +43,9 @@
         [l2 (string->list s2)])
     (list->string (for/list ([c1 l1] [c2 l2])
                     (if (or (char=? c1 #\1) (char=? c2 #\1)) #\1 #\0)))))
+
+(define (bitstring-and s1 s2)
+  (let ([l1 (string->list s1)]
+        [l2 (string->list s2)])
+    (list->string (for/list ([c1 l1] [c2 l2])
+                    (if (or (char=? c1 #\0) (char=? c2 #\0)) #\0 #\1)))))

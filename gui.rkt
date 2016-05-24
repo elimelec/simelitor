@@ -28,7 +28,7 @@
 
 (define (update-lists)
   (send registers-list set (vector->list (registers)))
-  (send memory-list set (vector->list (memory-range 0 65536)))
+  (send memory-list set (vector->list (memory-range 0 1024)))
   (send cpu-registers-list-names set (registers-list-names))
   (send cpu-registers-list-values set (registers-list-values))
   (send source-code-list select (dec (pc)))
@@ -134,7 +134,7 @@
 
 (define memory-list (create-list
                      rigth-panel
-                     (vector->list (memory-range 0 65536))
+                     (vector->list (memory-range 0 1024))
                      "Memory"))
 
 (define registers-panel (new horizontal-panel%

@@ -1,5 +1,7 @@
 #lang racket/gui
 
+(require threading)
+
 (require "elisembler.rkt")
 (require "cpu.rkt")
 (require "bin.rkt")
@@ -158,8 +160,11 @@
                         [parent buttons-panel]
                         [label "Run"]
                         [callback (lambda (button event)
-                                    (repeat perform-step 3000)
-                                    (perform-step #t))]))
+                                    (while (let ([pc (dec (pc))])
+                                             (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (andmap positive? _)))
+                                           (perform-step))
+                                    (save-cpu)
+                                    (update-lists))]))
 
 (define back-button (new button%
                          [parent buttons-panel]

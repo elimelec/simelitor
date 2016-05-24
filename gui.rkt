@@ -39,10 +39,12 @@
 
 (define (registers-list-values)
   (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
-        (mar) (mir) (number->string (state)) (sbus) (dbus) (rbus)))
+        (mar) (mir) (number->string (state))
+        (number->string (counter)) (sbus) (dbus) (rbus)))
 (define (registers-list-names)
   (list "flag" "sp" "t" "pc" "ivr" "adr" "ir"
-        "mar" "mir" "state" "sbus" "dbus" "rbus"))
+        "mar" "mir" "state"
+        "counter" "sbus" "dbus" "rbus"))
 
 (define (update-lists)
   (send registers-list set (vector->list (registers)))

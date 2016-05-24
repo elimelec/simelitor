@@ -137,12 +137,22 @@
                          [label "Step"]
                          [callback (lambda (button event) (perform-step #t))]))
 
+(define step-mi-button (new button%
+                            [parent buttons-panel]
+                            [label "Step Micro Instruction"]
+                            [callback (lambda (button event)
+                                        (repeat perform-step 8)
+                                        (perform-step #t))]))
+
 (define step-i-button (new button%
                            [parent buttons-panel]
-                           [label "Step Micro Instruction"]
+                           [label "Step Instruction"]
                            [callback (lambda (button event)
-                                       (repeat perform-step 8)
-                                       (perform-step #t))]))
+                                       (repeat perform-step 9)
+                                       (while (not (= (dec (mar)) 0))
+                                              (perform-step))
+                                       (save-cpu)
+                                       (update-lists))]))
 
 (define run-button (new button%
                         [parent buttons-panel]

@@ -7,7 +7,7 @@
 (struct cpu (registers
              flag sp t pc ivr adr mdr ir mar mir
              memory
-             microprogram state
+             microprogram state counter
              sbus dbus rbus) #:mutable)
 
 (define (make-cpu)
@@ -15,7 +15,7 @@
   (cpu (make-vector 16 zero)
        zero zero zero zero zero zero zero zero zero (bin 0 64)
        (make-vector 65536 zero)
-       (make-vector 138 (bin 0 64)) 0
+       (make-vector 138 (bin 0 64)) 0 0
        zero zero zero))
 
 (define (registers)
@@ -97,6 +97,11 @@
   (cpu-state a-cpu))
 (define (set-state! state)
   (set-cpu-state! a-cpu state))
+
+(define (counter)
+  (cpu-counter a-cpu))
+(define (increment-counter!)
+  (set-cpu-counter! a-cpu (add1 (counter))))
 
 (define (sbus)
   (cpu-sbus a-cpu))
@@ -584,6 +589,7 @@
            (set-state! 0)))]
     [9 (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
          (set-mar! new-mar)
-         (set-state! 0))]))
+         (set-state! 0))])
+  (increment-counter!))
 
 (define a-cpu (make-cpu))

@@ -281,11 +281,16 @@
   (println "and")
   (set-rbus! (bitstring-and (sbus) (dbus))))
 
+(define (alu-or)
+  (println "or")
+  (set-rbus! (bitstring-or (sbus) (dbus))))
+
 (define (exec-alu op)
   (match op
     ["0000" (none)]
     ["0001" (sum)]
     ["0010" (alu-and)]
+    ["0011" (alu-or)]
     [else (error op "alu")]))
 
 (define (pmflag)

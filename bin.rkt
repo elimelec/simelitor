@@ -31,3 +31,9 @@
 (define (bitstring-not s)
   (regexp-replace* #px"[01]" s
                    (lambda (s) (if (string=? s "0") "1" "0"))))
+
+(define (bitstring-xor s1 s2)
+  (let ([l1 (string->list s1)]
+        [l2 (string->list s2)])
+    (list->string (for/list ([c1 l1] [c2 l2])
+                    (if (char=? c1 c2) #\0 #\1)))))

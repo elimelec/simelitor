@@ -277,10 +277,15 @@
     ["1011" (pd0d)]
     [else (error op "dbus")]))
 
+(define (alu-and)
+  (println "and")
+  (set-rbus! (bitstring-and (sbus) (dbus))))
+
 (define (exec-alu op)
   (match op
     ["0000" (none)]
     ["0001" (sum)]
+    ["0010" (alu-and)]
     [else (error op "alu")]))
 
 (define (pmflag)

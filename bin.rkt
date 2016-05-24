@@ -4,6 +4,8 @@
 
 (define bin
   (lambda (n [l 16])
+    (when (< n 0)
+      (raise "n can't be negative"))
     (~a (number->string n 2) #:min-width l #:align 'right #:left-pad-string "0")))
 
 (define (dec n)

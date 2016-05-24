@@ -18,6 +18,7 @@
   (replace-cpu! (car cpu-history))
   (set! cpu-history (cdr cpu-history)))
 (define (pop-cpu)
+  (save-cpu)
   (replace-cpu! (car cpu-history-stack))
   (set! cpu-history-stack (cdr cpu-history-stack)))
 
@@ -260,7 +261,10 @@
 (define (eval-command command)
   (let ([command (string-append "(" command ")")])
     (let ([result (eval (call-with-input-string command racket-read))])
-      (println result))))
+      (send eval-command-result set-value
+            (cond
+              [(string? result) result]
+              [(number? result) (number->string result)])))))
 
 (define eval-command-input (new text-field%
                                 [label "Command"]
@@ -270,6 +274,10 @@
                                  [parent eval-command-panel]
                                  [label "Eval Command"]
                                  [callback (lambda (button event) (eval-asm))]))
+(define eval-command-result (new text-field%
+                                [label "Last Result"]
+                                [parent eval-command-panel]
+                                [callback eval-command-input-changed]))
 
 (send frame show #t)
 (load-source-code (string->path "test.s"))

@@ -97,6 +97,10 @@
      (string-append
       (hash-ref opcodes op)
       (string-append "01" (bin (string->number r2) 4)))]
+    [(pregexp #px"(b[a-z]+) ([0-9-]{1,5})" (list _ op offset))
+     (string-append
+      (hash-ref opcodes op)
+      (string-append (sbin (string->number offset) 8)))]
     [(pregexp #px"([a-z-]+)" (list _ op))
      (string-append
       (hash-ref opcodes op))]))

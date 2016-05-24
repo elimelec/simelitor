@@ -264,7 +264,8 @@
       (send eval-command-result set-value
             (cond
               [(string? result) result]
-              [(number? result) (number->string result)])))))
+              [(number? result) (number->string result)]
+              [else ""])))))
 
 (define eval-command-input (new text-field%
                                 [label "Command"]

@@ -35,7 +35,7 @@
 (define perform-step
   (lambda ([update-gui #f])
     (step)
-    (when update-gui (update-lists))))
+    (when update-gui (save-cpu) (update-lists))))
 
 (define (registers-list-values)
   (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
@@ -148,6 +148,13 @@
                         [callback (lambda (button event)
                                     (repeat perform-step 3000)
                                     (perform-step #t))]))
+
+(define back-button (new button%
+                         [parent buttons-panel]
+                         [label "Back"]
+                         [callback (lambda (button event)
+                                     (restore-cpu)
+                                     (update-lists))]))
 
 (define registers-list (create-list
                         rigth-panel

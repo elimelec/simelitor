@@ -122,49 +122,38 @@
   (set-cpu-rbus! a-cpu value))
 
 (define (sum)
-  (println "sum")
   (let ([sum (bin (+ (dec (sbus)) (dec (dbus))) 16)])
     (set-rbus! sum)))
 
 (define (pdiroffs)
-  (println "pdiroffs")
   (set-sbus! (bin (dec (substring (ir) 8 16)))))
 
 (define (pd0s)
-  (println "pd0s")
   (set-sbus! (bin 0 16)))
 
 (define (pdiroffd)
-  (println "pdiroffd")
   (set-dbus! (bin (dec (substring (ir) 8 16)))))
 
 (define (pdpcd)
-  (println "pdpcd")
   (set-dbus! (pc)))
 
 (define (pmadr)
-  (println "pmadr")
   (set-adr! (rbus)))
 
 (define (+2pc)
-  (println "+2pc")
   (let ([new-pc (bin (+ (dec (pc)) 1) 16)])
     (set-pc! new-pc)))
 
-(define (none)
-  (println "none"))
+(define (none) (void))
 
 (define (ifch)
-  (println "ifch")
   (let ([ir (memory (dec (adr)))])
     (set-ir! ir)))
 
 (define (read)
-  (println "read")
   (set-mdr! (memory (dec (adr)))))
 
 (define (write)
-  (println "write")
   (set-memory! (dec (adr)) (mdr)))
 
 (define (error op block)
@@ -172,47 +161,36 @@
     (raise error)))
 
 (define (pdflags)
-  (println "pdflags")
   (set-sbus! (flag)))
 
 (define (pdsps)
-  (println "pdsps")
   (set-sbus! (sp)))
 
 (define (pdts)
-  (println "pdts")
   (set-sbus! (t)))
 
 (define (pdnotts)
-  (println "pdnotts")
   (set-sbus! (bitstring-not (t))))
 
 (define (pdpcs)
-  (println "pdpcs")
   (set-sbus! (pc)))
 
 (define (pdivrs)
-  (println "pdivrs")
   (set-sbus! (ivr)))
 
 (define (pdadrs)
-  (println "pdadrs")
   (set-sbus! (adr)))
 
 (define (pdmdrs)
-  (println "pdmdrs")
   (set-sbus! (mdr)))
 
 (define (pdrgs)
-  (println "pdrgs")
   (set-sbus! (register (dec (substring (ir) 6 10)))))
 
 (define (pd-1s)
-  (println "pd-1s")
   (set-sbus! (bitstring-not (bin 0))))
 
 (define (pd1s)
-  (println "pd1s")
   (set-sbus! (bin 1)))
 
 (define (exec-sbus op)
@@ -234,39 +212,30 @@
     [else (error op "sbus")]))
 
 (define (pdflagd)
-  (println "pdflagd")
   (set-dbus! (flag)))
 
 (define (pdspd)
-  (println "pdspd")
   (set-dbus! (sp)))
 
 (define (pdtd)
-  (println "pdtd")
   (set-dbus! (t)))
 
 (define (pdnottd)
-  (println "pdnottd")
   (set-dbus! (bitstring-not (t))))
 
 (define (pdmdrd)
-  (println "pdmdrd")
   (set-dbus! (mdr)))
 
 (define (pdivrd)
-  (println "pdivrd")
   (set-dbus! (ivr)))
 
 (define (pdadrd)
-  (println "pdadrd")
   (set-dbus! (adr)))
 
 (define (pdrgd)
-  (println "pdrgd")
   (set-dbus! (register (dec (substring (ir) 6 10)))))
 
 (define (pd0d)
-  (println "pd0d")
   (set-dbus! (bin 0)))
 
 (define (exec-dbus op)
@@ -286,19 +255,15 @@
     [else (error op "dbus")]))
 
 (define (alu-and)
-  (println "and")
   (set-rbus! (bitstring-and (sbus) (dbus))))
 
 (define (alu-or)
-  (println "or")
   (set-rbus! (bitstring-or (sbus) (dbus))))
 
 (define (alu-xor)
-  (println "xor")
   (set-rbus! (bitstring-xor (sbus) (dbus))))
 
 (define (notdbus)
-  (println "notdbus")
   (set-rbus! (bitstring-not (dbus))))
 
 (define (exec-alu op)
@@ -312,31 +277,24 @@
     [else (error op "alu")]))
 
 (define (pmflag)
-  (println "pmflag")
   (set-flag! (rbus)))
 
 (define (pmrg)
-  (println "pmrg")
   (set-register! (dec (substring (ir) 12 16)) (rbus)))
 
 (define (pmsp)
-  (println "pmsp")
   (set-sp! (rbus)))
 
 (define (pmpc)
-  (println "pmpc")
   (set-pc! (rbus)))
 
 (define (pmivr)
-  (println "pmivr")
   (set-ivr! (rbus)))
 
 (define (pmt)
-  (println "pmt")
   (set-t! (rbus)))
 
 (define (pmmdr)
-  (println "pmmdr")
   (set-mdr! (rbus)))
 
 (define (exec-rbus op)
@@ -358,51 +316,39 @@
       (list->string (vector->list v))))
 
 (define (+2sp)
-  (println "+2sp")
   (set-sp! (bin (+ (dec (sp)) 1))))
 
 (define (-2sp)
-  (println "-2sp")
   (set-sp! (bin (- (dec (sp)) 1))))
 
 (define (a0c)
-  (println "a0c")
   (set-flag! (string-replace-index (flag) 2 #\0)))
 
 (define (a1c)
-  (println "a1c")
   (set-flag! (string-replace-index (flag) 2 #\1)))
 
 (define (a0v)
-  (println "a0v")
   (set-flag! (string-replace-index (flag) 5 #\0)))
 
 (define (a1v)
-  (println "a1v")
   (set-flag! (string-replace-index (flag) 5 #\1)))
 
 (define (a0z)
-  (println "a0z")
   (set-flag! (string-replace-index (flag) 3 #\0)))
 
 (define (a1z)
-  (println "a1z")
   (set-flag! (string-replace-index (flag) 3 #\1)))
 
 (define (a0s)
-  (println "a0s")
   (set-flag! (string-replace-index (flag) 4 #\0)))
 
 (define (a1s)
-  (println "a1s")
   (set-flag! (string-replace-index (flag) 4 #\1)))
 
 (define (a0bvi)
-  (println "a0bvi")
   (set-flag! (string-replace-index (flag) 9 #\0)))
 
 (define (a1bvi)
-  (println "a1bvi")
   (set-flag! (string-replace-index (flag) 9 #\1)))
 
 (define (exec-other op)
@@ -436,31 +382,24 @@
     [else (error op "memory")]))
 
 (define (c)
-  (println "c")
   (if (string=? (substring (flag) 2 3) "1") #t #f))
 
 (define (z)
-  (println "z")
   (if (string=? (substring (flag) 3 4) "1") #t #f))
 
 (define (s)
-  (println "s")
   (if (string=? (substring (flag) 4 5) "1") #t #f))
 
 (define (v)
-  (println "v")
   (if (string=? (substring (flag) 5 6) "1") #t #f))
 
 (define (ad)
-  (println "ad")
   (if (string=? (substring (ir) 10 12) "01") #t #f))
 
 (define (aclow)
-  (println "aclow")
   (if (string=? (substring (flag) 7 8) "1") #t #f))
 
 (define (cil)
-  (println "cil")
   (if (string=? (substring (flag) 8 9) "1") #t #f))
 
 (define (f)
@@ -478,7 +417,6 @@
       [else (error op "f")])))
 
 (define (g)
-  (println "g")
   (let ([ntf (mir 55 56)])
     (let ([ntf (string=? ntf "1")])
       (xor ntf (f)))))
@@ -494,13 +432,11 @@
     (bitwise-and ir15 ir13)))
 
 (define (cl-bitwise)
-  (println "cl")
   (let ([cl0 (cl0)]
         [cl1 (cl1)])
     (bitwise-ior (arithmetic-shift cl1 1) cl0)))
 
 (define (index1)
-  (println "index1")
   (let ([op1 (substring (ir) 0 1)]
         [op2 (substring (ir) 1 3)])
     (cond
@@ -511,32 +447,26 @@
       [else (error (substring (ir) 0 3) "cl")])))
 
 (define (index2)
-  (println "index2")
   (let ([op (substring (ir) 4 6)])
     (* (string->number op 2) 2)))
 
 (define (index3)
-  (println "index3")
   (let ([op (substring (ir) 10 12)])
     (* (string->number op 2) 2)))
 
 (define (index4)
-  (println "index4")
   (let ([op (substring (ir) 1 4)])
     (* (string->number op 2) 2)))
 
 (define (index5)
-  (println "index5")
   (let ([op (substring (ir) 3 7)])
     (* (string->number op 2) 2)))
 
 (define (index6)
-  (println "index6")
   (let ([op (substring (ir) 3 7)])
     (* (string->number op 2) 2)))
 
 (define (index7)
-  (println "index7")
   (let ([op (substring (ir) 3 8)])
     (* (string->number op 2) 2)))
 

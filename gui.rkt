@@ -254,10 +254,10 @@
 
 (define eval-command-input (new text-field%
                                 [label "Command"]
-                                [parent eval-panel]
+                                [parent eval-command-panel]
                                 [callback eval-command-input-changed]))
 (define eval-command-button (new button%
-                                 [parent eval-panel]
+                                 [parent eval-command-panel]
                                  [label "Eval Command"]
                                  [callback (lambda (button event) (eval-asm))]))
 

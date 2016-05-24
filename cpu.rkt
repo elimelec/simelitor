@@ -122,17 +122,17 @@
   (set-cpu-rbus! a-cpu value))
 
 (define (sum)
-  (let ([sum (bin (+ (dec (sbus)) (dec (dbus))) 16)])
+  (let ([sum (sbin (+ (sdec (sbus)) (sdec (dbus))) 16)])
     (set-rbus! sum)))
 
 (define (pdiroffs)
-  (set-sbus! (bin (dec (substring (ir) 8 16)))))
+  (set-sbus! (sbin (sdec (substring (ir) 8 16)))))
 
 (define (pd0s)
-  (set-sbus! (bin 0 16)))
+  (set-sbus! (sbin 0)))
 
 (define (pdiroffd)
-  (set-dbus! (bin (dec (substring (ir) 8 16)))))
+  (set-dbus! (sbin (sdec (substring (ir) 8 16)))))
 
 (define (pdpcd)
   (set-dbus! (pc)))
@@ -141,20 +141,20 @@
   (set-adr! (rbus)))
 
 (define (+2pc)
-  (let ([new-pc (bin (+ (dec (pc)) 1) 16)])
+  (let ([new-pc (sbin (add1 (sdec (pc))))])
     (set-pc! new-pc)))
 
 (define (none) (void))
 
 (define (ifch)
-  (let ([ir (memory (dec (adr)))])
+  (let ([ir (memory (sdec (adr)))])
     (set-ir! ir)))
 
 (define (read)
-  (set-mdr! (memory (dec (adr)))))
+  (set-mdr! (memory (sdec (adr)))))
 
 (define (write)
-  (set-memory! (dec (adr)) (mdr)))
+  (set-memory! (sdec (adr)) (mdr)))
 
 (define (error op block)
   (let ([error (string-append op " " block " function not yet implemented")])
@@ -188,10 +188,10 @@
   (set-sbus! (register (dec (substring (ir) 6 10)))))
 
 (define (pd-1s)
-  (set-sbus! (bitstring-not (bin 0))))
+  (set-sbus! (sbin -1)))
 
 (define (pd1s)
-  (set-sbus! (bin 1)))
+  (set-sbus! (sbin 1)))
 
 (define (exec-sbus op)
   (match op
@@ -236,7 +236,7 @@
   (set-dbus! (register (dec (substring (ir) 6 10)))))
 
 (define (pd0d)
-  (set-dbus! (bin 0)))
+  (set-dbus! (sbin 0)))
 
 (define (exec-dbus op)
   (match op

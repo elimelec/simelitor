@@ -291,6 +291,10 @@
   (println "pmrg")
   (set-register! (dec (substring (ir) 12 16)) (rbus)))
 
+(define (pmsp)
+  (println "pmsp")
+  (set-sp! (rbus)))
+
 (define (pmt)
   (println "pmt")
   (set-t! (rbus)))
@@ -304,6 +308,7 @@
     ["0000" (none)]
     ["0001" (pmflag)]
     ["0010" (pmrg)]
+    ["0011" (pmsp)]
     ["0100" (pmt)]
     ["0111" (pmadr)]
     ["1000" (pmmdr)]

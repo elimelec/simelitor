@@ -32,9 +32,13 @@
   (send cpu-registers-list-names set (registers-list-names))
   (send cpu-registers-list-values set (registers-list-values))
   (send source-code-list select (dec (pc)))
+  (send source-code-list set-first-visible-item (dec (pc)))
   (send source-code-assembled select (dec (pc)))
+  (send source-code-assembled set-first-visible-item (dec (pc)))
   (send microprogram-text-list select (dec (mar)))
-  (send microprogram-bin-list select (dec (mar))))
+  (send microprogram-text-list set-first-visible-item (dec (mar)))
+  (send microprogram-bin-list select (dec (mar)))
+  (send microprogram-bin-list set-first-visible-item (dec (mar))))
 
 (define (create-list parent choices name)
   (new list-box%

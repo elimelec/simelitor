@@ -1,6 +1,7 @@
 #lang racket/gui
 
 (require threading)
+(require racket/vector)
 (require (only-in racket/base (read racket-read)))
 
 (require "elisembler.rkt")
@@ -10,10 +11,18 @@
 (define cpu-history '())
 (define cpu-history-stack '())
 
+(define (copy-cpu a-cpu)
+  (let* ([cpu-copy (struct-copy cpu a-cpu)]
+         [registers-copy (vector-copy (cpu-registers cpu-copy))]
+         [memory-copy (vector-copy (cpu-memory cpu-copy))])
+    (set-cpu-registers! cpu-copy registers-copy)
+    (set-cpu-memory! cpu-copy memory-copy)
+    cpu-copy))
+
 (define (save-cpu)
-  (set! cpu-history (cons (struct-copy cpu a-cpu) cpu-history)))
+  (set! cpu-history (cons (copy-cpu a-cpu) cpu-history)))
 (define (push-cpu)
-  (set! cpu-history-stack (cons (struct-copy cpu a-cpu) cpu-history-stack)))
+  (set! cpu-history-stack (cons (copy-cpu a-cpu) cpu-history-stack)))
 (define (restore-cpu)
   (when (> (length cpu-history) 1)
     (replace-cpu! (car cpu-history))

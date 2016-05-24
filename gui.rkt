@@ -4,6 +4,24 @@
 (require "cpu.rkt")
 (require "bin.rkt")
 
+(define cpu-history '())
+(define cpu-history-stack '())
+
+(define (save-cpu)
+  (set! cpu-history (cons (struct-copy cpu a-cpu) cpu-history)))
+(define (push-cpu)
+  (set! cpu-history-stack (cons (struct-copy cpu a-cpu) cpu-history-stack)))
+(define (restore-cpu)
+  (replace-cpu! (car cpu-history))
+  (set! cpu-history (cdr cpu-history)))
+(define (pop-cpu)
+  (replace-cpu! (car cpu-history-stack))
+  (set! cpu-history-stack (cdr cpu-history-stack)))
+
+(save-cpu)
+(push-cpu)
+
+
 (define (repeat f count)
   (for ([i (in-range count)])
     (f)))

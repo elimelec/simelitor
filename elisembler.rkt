@@ -87,12 +87,12 @@
       (hash-ref opcodes op)
       (string-append "01" (bin (string->number r2) 4))
       (string-append "01" (bin (string->number r1) 4)))]
-    [(pregexp #px"([a-z]+) r([0-9]{1,2}), ([0-9]{1,5})" (list _ op r1 n))
+    [(pregexp #px"([a-z]+) r([0-9]{1,2}), ([0-9-]{1,5})" (list _ op r1 n))
      (string-append
       (hash-ref opcodes op)
       (string-append "00" "0000")
       (string-append "01" (bin (string->number r1) 4))
-      (bin (string->number n)))]
+      (sbin (string->number n)))]
     [(pregexp #px"([a-z]+) r([0-9]{1,2})" (list _ op r2))
      (string-append
       (hash-ref opcodes op)

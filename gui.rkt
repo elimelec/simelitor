@@ -242,16 +242,29 @@
          [ok (syntax-ok? (list text))])
     (define (set-color color) (send text-field set-field-background (make-object color% color)))
     (cond
-      [(eq? event 'text-field-enter) (eval-asm)]
+      [(eq? event 'text-field-enter) (eval-asm (send eval-input get-value))]
       [(string=? text "") (set-color "white")]
       [ok (set-color "green")]
       [else (set-color "red")])))
-(define (eval-asm)
-  (define input (send eval-input get-value))
-  (define code (compile-asm (list input)))
-  (send (send eval-input get-editor) erase)
-  (set-memory! 0 (first code))
-  (update-lists))
+
+(define (eval-asm asm)
+  (let ([assembled (compile-asm (list asm))]
+        [old-cpu (copy-cpu a-cpu)])
+    (send (send eval-input get-editor) erase)
+    (save-cpu)
+    (save-cpu)
+    (memory-copy (list->vector assembled) 0)
+    (set-pc! (bin 0))
+    (set-state! 0)
+    (set-mar! (bin 0))
+    (repeat perform-step 9)
+    (while (not (= (dec (mar)) 0))
+           (perform-step))
+    (let ([new-registers (vector-copy (registers) 0)])
+      (restore-cpu)
+      (set-registers! new-registers))
+    (update-lists)))
+
 (define eval-input (new text-field%
                         [label "Code"]
                         [parent eval-panel]
@@ -259,7 +272,7 @@
 (define eval-button (new button%
                          [parent eval-panel]
                          [label "Eval"]
-                         [callback (lambda (button event) (eval-asm))]))
+                         [callback (lambda (button event) (eval-asm (send eval-input get-value)))]))
 
 
 

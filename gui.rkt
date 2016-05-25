@@ -135,8 +135,10 @@
                                   [3 (list instr "" "")]
                                   [4 (list instr "" "" "")])))))]
          [assembly (compile-asm-file path)]
-         [numbers (map number->string (sequence->list (in-range (length source))))])
-    (send source-code-list set numbers source assembly)
+         [numbers (map number->string (sequence->list (in-range (length source))))]
+         [hex (map hex assembly)]
+         [dec (map (compose1 number->string sdec) assembly)])
+    (send source-code-list set numbers source assembly hex dec)
     (memory-copy (list->vector assembly) 0)))
 
 (define (load-microcode path)
@@ -201,7 +203,7 @@
        [parent source-panel]
        [choices '()]
        [style (list 'single 'column-headers)]
-       [columns (list "Line" "Text" "Assembled")]))
+       [columns (list "Line" "Text" "Binary" "Hex" "Decimal")]))
 
 (define microprogram-list
   (new list-box%

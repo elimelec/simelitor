@@ -148,7 +148,10 @@
 
 (define buttons-panel (new horizontal-panel%
                            [parent left-panel]
-                           [style (list 'border)]))
+                           [style (list 'border)]
+                           [alignment (list 'center 'center)]
+                           [min-height 50]
+                           [stretchable-height #f]))
 (define source-panel (new horizontal-panel%
                           [parent left-panel]
                           [style (list 'border)]))

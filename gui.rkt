@@ -72,8 +72,8 @@
 
 (define (registers-list-values)
   (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
-        (mar) (mir) (number->string (state))
-        (number->string (counter)) (sbus) (dbus) (rbus)))
+        (mar) (mir) (bin (state))
+        (bin (counter)) (sbus) (dbus) (rbus)))
 (define (registers-list-names)
   (list "flag" "sp" "t" "pc" "ivr" "adr" "ir"
         "mar" "mir" "state"
@@ -87,8 +87,12 @@
     (send registers-list set i bin hex dec))
 
   (send memory-list set (vector->list (memory-range 0 1024)))
-  (send cpu-registers-list-names set (registers-list-names))
-  (send cpu-registers-list-values set (registers-list-values))
+
+  (let* ([n (registers-list-names)]
+         [v (registers-list-values)]
+         [d (map (compose1 number->string sdec) v)]
+         [h (map hex v)])
+    (send other-registers-panel set n v h d))
 
   (let ([pc (dec (pc))]
         [first (send source-code-list get-first-visible-item)]
@@ -283,17 +287,13 @@
                      (vector->list (memory-range 0 1024))
                      "Memory"))
 
-(define registers-panel (new horizontal-panel%
-                        [parent rigth-panel]
-                        [style (list 'border)]))
-(define cpu-registers-list-names (create-list
-                              registers-panel
-                              (registers-list-names)
-                              "Registers"))
-(define cpu-registers-list-values (create-list
-                               registers-panel
-                               (registers-list-values)
-                               "Values"))
+(define other-registers-panel
+  (new list-box%
+       [label #f]
+       [parent rigth-panel]
+       [choices '()]
+       [style (list 'single 'column-headers)]
+       [columns (list "Name" "Binary" "Hex" "Decimal")]))
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]

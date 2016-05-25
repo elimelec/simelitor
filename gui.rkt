@@ -160,7 +160,10 @@
                              [style (list 'border)]))
 (define eval-panel (new horizontal-panel%
                         [parent left-panel]
-                        [style (list 'border)]))
+                        [style (list 'border)]
+                        [alignment (list 'center 'center)]
+                        [min-height 50]
+                        [stretchable-height #f]))
 (define eval-command-panel (new horizontal-panel%
                                 [parent left-panel]
                                 [style (list 'border)]))

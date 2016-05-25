@@ -191,7 +191,7 @@
      [callback (lambda (button event)
                  (save-cpu)
                  (while (let ([pc (dec (pc))])
-                          (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (andmap positive? _)))
+                          (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (ormap positive? _)))
                         (perform-step))
                  (update-lists))])
 

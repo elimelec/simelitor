@@ -86,10 +86,8 @@
   (send cpu-registers-list-values set (registers-list-values))
   (send source-code-list select (dec (pc)))
   (send source-code-list set-first-visible-item (dec (pc)))
-  (send microprogram-text-list select (dec (mar)))
-  (send microprogram-text-list set-first-visible-item (dec (mar)))
-  (send microprogram-bin-list select (dec (mar)))
-  (send microprogram-bin-list set-first-visible-item (dec (mar))))
+  (send microprogram-list select (dec (mar)))
+  (send microprogram-list set-first-visible-item (dec (mar))))
 
 (define (create-list parent choices name)
   (new list-box%
@@ -118,15 +116,12 @@
     (send source-code-list set numbers source assembly)
     (memory-copy (list->vector assembly) 0)))
 
-(define microprogram-bin-list #f)
-(define microprogram-text-list #f)
 (define (load-microcode path)
   (define path-string (path->string path))
   (define microprogram-bin (file->lines path-string))
   (define microprogram-text (file->lines (string-replace path-string "bin" "txt")))
-
-  (set! microprogram-text-list (create-list microcode-panel microprogram-text "Text Microcode"))
-  (set! microprogram-bin-list (create-list microcode-panel microprogram-bin "Binary Microcode"))
+  (define numbers (map number->string (sequence->list (in-range (length microprogram-text)))))
+  (send microprogram-list set numbers microprogram-text microprogram-bin)
   (set-microprogram! (list->vector microprogram-bin)))
 
 (define (open-file button event)
@@ -174,6 +169,14 @@
        [choices '()]
        [style (list 'single 'column-headers)]
        [columns (list "Line" "Text" "Assembled")]))
+
+(define microprogram-list
+  (new list-box%
+       [label #f]
+       [parent microcode-panel]
+       [choices '()]
+       [style (list 'single 'column-headers)]
+       [columns (list "Line" "Text" "Binary")]))
 
 (new button%
      [parent buttons-panel]

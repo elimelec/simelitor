@@ -86,7 +86,11 @@
          [i (map number->string (sequence->list (in-range (length bin))))])
     (send registers-list set i bin hex dec))
 
-  (send memory-list set (vector->list (memory-range 0 1024)))
+  (let* ([b (vector->list (memory-range 0 1024))]
+         [h (map hex b)]
+         [d (map (compose1 number->string sdec) b)]
+         [i (~> b length in-range sequence->list (map number->string _))])
+    (send memory-list set i b h d))
 
   (let* ([n (registers-list-names)]
          [v (registers-list-values)]
@@ -282,10 +286,13 @@
        [style (list 'single 'column-headers)]
        [columns (list "Register" "Binary" "Hex" "Decimal")]))
 
-(define memory-list (create-list
-                     rigth-panel
-                     (vector->list (memory-range 0 1024))
-                     "Memory"))
+(define memory-list
+  (new list-box%
+       [label #f]
+       [parent rigth-panel]
+       [choices '()]
+       [style (list 'single 'column-headers)]
+       [columns (list "Address" "Binary" "Hex" "Decimal")]))
 
 (define other-registers-panel
   (new list-box%

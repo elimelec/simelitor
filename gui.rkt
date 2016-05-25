@@ -84,10 +84,20 @@
   (send memory-list set (vector->list (memory-range 0 1024)))
   (send cpu-registers-list-names set (registers-list-names))
   (send cpu-registers-list-values set (registers-list-values))
-  (send source-code-list select (dec (pc)))
-  (send source-code-list set-first-visible-item (dec (pc)))
-  (send microprogram-list select (dec (mar)))
-  (send microprogram-list set-first-visible-item (dec (mar))))
+
+  (let ([pc (dec (pc))]
+        [first (send source-code-list get-first-visible-item)]
+        [visible (sub1 (send source-code-list number-of-visible-items))])
+    (send source-code-list select pc)
+    (when (or (< (+ first visible) pc) (< pc first))
+      (send source-code-list set-first-visible-item pc)))
+
+  (let ([mar (dec (mar))]
+        [first (send microprogram-list get-first-visible-item)]
+        [visible (sub1 (send microprogram-list number-of-visible-items))])
+    (send microprogram-list select mar)
+    (when (or (< (+ first visible) mar) (< mar first))
+      (send microprogram-list set-first-visible-item mar))))
 
 (define (create-list parent choices name)
   (new list-box%

@@ -136,6 +136,25 @@
 
 (define frame (new frame% [label "Simelitor"]))
 
+(define menu-bar (new menu-bar% [parent frame]))
+
+(define file-menu
+  (new menu% [label "File"] [parent menu-bar]))
+
+(define open-source-menu-item
+  (new menu-item%
+       [label "Open Source"]
+       [parent file-menu]
+       [shortcut #\o]
+       [callback open-file]))
+
+(define open-microcode-menu-item
+  (new menu-item%
+       [label "Open Microcode"]
+       [shortcut #\o] [shortcut-prefix (list 'shift 'cmd)]
+       [parent file-menu]
+       [callback open-microcode]))
+
 (define root-panel (new horizontal-panel%
                         [parent frame]
                         [style (list 'border)]))
@@ -177,16 +196,6 @@
        [choices '()]
        [style (list 'single 'column-headers)]
        [columns (list "Line" "Text" "Binary")]))
-
-(new button%
-     [parent buttons-panel]
-     [label "Open Source"]
-     [callback open-file])
-
-(new button%
-     [parent buttons-panel]
-     [label "Open Microcode"]
-     [callback open-microcode])
 
 (new button%
      [parent buttons-panel]

@@ -136,22 +136,6 @@
 
 (define frame (new frame% [label "Simelitor"]))
 
-(let ([menu-bar (new menu-bar% [parent frame])])
-  (let ([file-menu
-         (new menu% [label "File"] [parent menu-bar])])
-    (new menu-item%
-         [label "Open Source"]
-         [parent file-menu]
-         [shortcut #\o]
-         [callback open-file])
-    (new menu-item%
-         [label "Open Microcode"]
-         [shortcut #\o] [shortcut-prefix (list 'shift 'cmd)]
-         [parent file-menu]
-         [callback open-microcode])
-    (void))
-  (void))
-
 (define root-panel (new horizontal-panel%
                         [parent frame]
                         [style (list 'border)]))
@@ -235,24 +219,31 @@
                         (perform-step))
                  (update-lists))])
 
+(define (back-callback item event)
+  (restore-cpu)
+  (update-lists))
+
 (new button%
      [parent buttons-panel]
      [label "Back"]
-     [callback (lambda (button event)
-                 (restore-cpu)
-                 (update-lists))])
+     [callback back-callback])
+
+(define (push-callback item event)
+  (push-cpu))
+
+(define (pop-callback item event)
+  (pop-cpu)
+  (update-lists))
 
 (new button%
      [parent buttons-panel]
      [label "Push"]
-     [callback (lambda (button event) (push-cpu))])
+     [callback push-callback])
 
 (new button%
      [parent buttons-panel]
      [label "Pop"]
-     [callback (lambda (button event)
-                 (pop-cpu)
-                 (update-lists))])
+     [callback pop-callback])
 
 (define registers-list (create-list
                         rigth-panel
@@ -344,6 +335,41 @@
                                 [label "Last Result"]
                                 [parent eval-command-panel]
                                 [callback eval-command-input-changed]))
+
+
+(let ([menu-bar (new menu-bar% [parent frame])])
+  (let ([file-menu
+         (new menu% [label "File"] [parent menu-bar])])
+    (new menu-item%
+         [label "Open Source"]
+         [parent file-menu]
+         [shortcut #\o]
+         [callback open-file])
+    (new menu-item%
+         [label "Open Microcode"]
+         [shortcut #\o] [shortcut-prefix (list 'shift 'cmd)]
+         [parent file-menu]
+         [callback open-microcode])
+    (void))
+  (let ([history
+         (new menu% [label "History"] [parent menu-bar])])
+    (new menu-item%
+         [label "Back"]
+         [parent history]
+         [shortcut #\z]
+         [callback back-callback])
+    (new menu-item%
+         [label "Push State"]
+         [parent history]
+         [shortcut #\s]
+         [callback push-callback])
+    (new menu-item%
+         [label "Pop State"]
+         [shortcut #\s] [shortcut-prefix (list 'shift 'cmd)]
+         [parent history]
+         [callback pop-callback])
+    (void))
+  (void))
 
 (send frame show #t)
 (load-source-code (string->path "test.s"))

@@ -142,13 +142,14 @@
     (memory-copy (list->vector assembly) 0)))
 
 (define (load-microcode path)
-  (define path-string (path->string path))
-  (define microprogram-bin (file->lines path-string))
-  (define microprogram-hex (map (lambda (s) (hex s 16)) microprogram-bin))
-  (define microprogram-text (file->lines (string-replace path-string "bin" "txt")))
-  (define numbers (map number->string (sequence->list (in-range (length microprogram-text)))))
-  (send microprogram-list set numbers microprogram-text microprogram-hex)
-  (set-microprogram! (list->vector microprogram-bin)))
+  (let* ([path-bin (path->string path)]
+         [path-text (string-replace (path->string path) "bin" "txt")]
+         [text (file->lines path-text)]
+         [bin (file->lines path-bin)]
+         [hex (map (lambda (s) (hex s 16)) bin)]
+         [i (~> text length in-range sequence->list (map number->string _))])
+    (send microprogram-list set i text hex)
+    (set-microprogram! (list->vector bin))))
 
 (define (open-file button event)
   (define path (get-file))

@@ -2,6 +2,7 @@
 
 (require threading)
 (require racket/vector)
+(require racket/sequence)
 (require (only-in racket/base (read racket-read)))
 
 (require "elisembler.rkt")
@@ -85,8 +86,6 @@
   (send cpu-registers-list-values set (registers-list-values))
   (send source-code-list select (dec (pc)))
   (send source-code-list set-first-visible-item (dec (pc)))
-  (send source-code-assembled select (dec (pc)))
-  (send source-code-assembled set-first-visible-item (dec (pc)))
   (send microprogram-text-list select (dec (mar)))
   (send microprogram-text-list set-first-visible-item (dec (mar)))
   (send microprogram-bin-list select (dec (mar)))
@@ -101,23 +100,22 @@
                     'column-headers)]
        [columns (list name)]))
 
-(define source-code-list #f)
-(define source-code-assembled #f)
+
 (define (load-source-code path)
-  (let ([source (let ([source (file->lines "test.s")])
-                  (let ([ls (~> source
-                                (map (lambda (i) (compile-asm (list i))) _)
-                                (map length _))])
-                    (flatten (for/list ([instr source]
-                                        [l ls])
-                               (match l
-                                 [1 (list instr)]
-                                 [2 (list instr "")]
-                                 [3 (list instr "" "")]
-                                 [4 (list instr "" "" "")])))))]
-        [assembly (compile-asm-file path)])
-    (set! source-code-list (create-list source-panel source "Source Code"))
-    (set! source-code-assembled (create-list source-panel assembly "Assembled Code"))
+  (let* ([source (let ([source (file->lines "test.s")])
+                   (let ([ls (~> source
+                                 (map (lambda (i) (compile-asm (list i))) _)
+                                 (map length _))])
+                     (flatten (for/list ([instr source]
+                                         [l ls])
+                                (match l
+                                  [1 (list instr)]
+                                  [2 (list instr "")]
+                                  [3 (list instr "" "")]
+                                  [4 (list instr "" "" "")])))))]
+         [assembly (compile-asm-file path)]
+         [numbers (map number->string (sequence->list (in-range (length source))))])
+    (send source-code-list set numbers source assembly)
     (memory-copy (list->vector assembly) 0)))
 
 (define microprogram-bin-list #f)
@@ -168,6 +166,14 @@
 (define eval-command-panel (new horizontal-panel%
                                 [parent left-panel]
                                 [style (list 'border)]))
+
+(define source-code-list
+  (new list-box%
+       [label #f]
+       [parent source-panel]
+       [choices '()]
+       [style (list 'single 'column-headers)]
+       [columns (list "Line" "Text" "Assembled")]))
 
 (new button%
      [parent buttons-panel]

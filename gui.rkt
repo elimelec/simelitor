@@ -8,6 +8,23 @@
 (require "cpu.rkt")
 (require "bin.rkt")
 
+(struct breakpoint (line code enabled) #:mutable #:transparent)
+(define breakpoints-list '())
+(define (find-breakpoint id)
+    (findf (lambda (breakpoint)
+             (= (breakpoint-line breakpoint) id))
+           breakpoints-list))
+(define set-breakpoint
+  (lambda (line [code "nop"] [enabled #t])
+    (let ([breakpoint (breakpoint line code enabled)])
+      (set! breakpoints-list (cons breakpoint breakpoints-list)))))
+(define (disable-breakpoint id)
+  (let ([breakpoint (find-breakpoint id)])
+    (when breakpoint (set-breakpoint-enabled! breakpoint #f))))
+(define (eval-breakpoint breakpoint)
+  (set-breakpoint-enabled! breakpoint #f)
+  (eval-asm (breakpoint-code breakpoint)))
+
 (define cpu-history '())
 (define cpu-history-stack '())
 
@@ -189,9 +206,17 @@
      [parent buttons-panel]
      [label "Run"]
      [callback (lambda (button event)
+                 (define (continue?)
+                   (let ([pc (dec (pc))])
+                     (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (ormap positive? _))))
+                 (define (breakpoint?)
+                   (let* ([pc (dec (pc))]
+                          [b (find-breakpoint pc)])
+                     (if b (if (breakpoint-enabled b)
+                               (begin (eval-breakpoint b)
+                                      #f) #t) #t)))
                  (save-cpu)
-                 (while (let ([pc (dec (pc))])
-                          (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (ormap positive? _)))
+                 (while (and (continue?) (breakpoint?))
                         (perform-step))
                  (update-lists))])
 

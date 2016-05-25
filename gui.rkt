@@ -86,6 +86,17 @@
          [i (map number->string (sequence->list (in-range (length bin))))])
     (send registers-list set i bin hex dec))
 
+  (for ([i (in-range 16)])
+    (send registers-list select i #f))
+  (let ([oldr (vector->list (cpu-registers (car cpu-history)))]
+        [newr (vector->list (cpu-registers a-cpu))])
+    (for ([i (for/list ([i (in-range (length newr))]
+                        [oldr oldr]
+                        [newr newr]
+                        #:when (not (string=? oldr newr)))
+               i)])
+      (send registers-list select i)))
+
   (let* ([b (vector->list (memory-range 0 1024))]
          [h (map hex b)]
          [d (map (compose1 number->string sdec) b)]
@@ -287,7 +298,7 @@
        [label #f]
        [parent rigth-panel]
        [choices '()]
-       [style (list 'single 'column-headers)]
+       [style (list 'multiple 'column-headers)]
        [columns (list "Register" "Binary" "Hex" "Decimal")]))
 
 (define memory-list

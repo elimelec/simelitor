@@ -28,6 +28,13 @@
       ["0" (dec number)]
       ["1" (~> number bitstring-not dec add1 -)])))
 
+(define hex
+  (lambda (b [l 4])
+    (~> (cond
+          [(string? b) (number->string (dec b) 16)]
+          [(number? b) (number->string b 16)])
+        (~a _ #:min-width l #:align 'right #:left-pad-string "0"))))
+
 (define (bitstring-not s)
   (regexp-replace* #px"[01]" s
                    (lambda (s) (if (string=? s "0") "1" "0"))))

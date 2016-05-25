@@ -80,7 +80,12 @@
         "counter" "sbus" "dbus" "rbus"))
 
 (define (update-lists)
-  (send registers-list set (vector->list (registers)))
+  (let* ([bin (vector->list (registers))]
+         [hex (map hex bin)]
+         [dec (map number->string (map sdec bin))]
+         [i (map number->string (sequence->list (in-range (length bin))))])
+    (send registers-list set i bin hex dec))
+
   (send memory-list set (vector->list (memory-range 0 1024)))
   (send cpu-registers-list-names set (registers-list-names))
   (send cpu-registers-list-values set (registers-list-values))
@@ -265,10 +270,13 @@
      [label "Pop"]
      [callback pop-callback])
 
-(define registers-list (create-list
-                        rigth-panel
-                        (vector->list (registers))
-                        "Registers"))
+(define registers-list
+  (new list-box%
+       [label #f]
+       [parent rigth-panel]
+       [choices '()]
+       [style (list 'single 'column-headers)]
+       [columns (list "Register" "Binary" "Hex" "Decimal")]))
 
 (define memory-list (create-list
                      rigth-panel

@@ -23,6 +23,8 @@
 
 (define (registers)
   (cpu-registers a-cpu))
+(define (set-registers! registers)
+  (set-cpu-registers! a-cpu registers))
 (define (register n)
   (vector-ref (cpu-registers a-cpu) n))
 (define (set-register! n value)

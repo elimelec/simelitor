@@ -190,30 +190,11 @@
                            [alignment (list 'center 'center)]
                            [min-height 50]
                            [stretchable-height #f]))
-(define source-panel (new horizontal-panel%
-                          [parent left-panel]
-                          [style (list 'border)]))
-(define microcode-panel (new horizontal-panel%
-                             [parent left-panel]
-                             [style (list 'border)]))
-(define eval-panel (new horizontal-panel%
-                        [parent left-panel]
-                        [style (list 'border)]
-                        [alignment (list 'center 'center)]
-                        [min-height 50]
-                        [stretchable-height #f]))
-
-(define eval-command-panel (new horizontal-panel%
-                                [parent left-panel]
-                                [style (list 'border)]
-                                [alignment (list 'center 'center)]
-                                [min-height 50]
-                                [stretchable-height #f]))
 
 (define source-code-list
   (new list-box%
        [label #f]
-       [parent source-panel]
+       [parent left-panel]
        [choices '()]
        [style (list 'single 'column-headers)]
        [columns (list "Line" "Text" "Binary" "Hex" "Decimal")]))
@@ -228,7 +209,7 @@
 (define microprogram-list
   (new list-box%
        [label #f]
-       [parent microcode-panel]
+       [parent left-panel]
        [choices '()]
        [style (list 'single 'column-headers)]
        [columns (list "Line" "Text" "Hex")]))
@@ -357,6 +338,19 @@
 (send other-registers-panel set-column-width 3
       50 50 50)
 
+(define eval-panel (new horizontal-panel%
+                        [parent left-panel]
+                        [style (list 'border)]
+                        [alignment (list 'center 'center)]
+                        [min-height 50]
+                        [stretchable-height #f]))
+
+(define eval-command-panel (new horizontal-panel%
+                                [parent left-panel]
+                                [style (list 'border)]
+                                [alignment (list 'center 'center)]
+                                [min-height 50]
+                                [stretchable-height #f]))
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]

@@ -71,11 +71,11 @@
     (when update-gui (update-lists))))
 
 (define (registers-list-values)
-  (list (flag) (sp) (t) (pc) (ivr) (adr) (ir)
+  (list (flag) (sp) (t) (pc) (real-pc) (ivr) (adr) (ir)
         (mar) (mir) (bin (state))
         (bin (counter)) (sbus) (dbus) (rbus)))
 (define (registers-list-names)
-  (list "flag" "sp" "t" "pc" "ivr" "adr" "ir"
+  (list "flag" "sp" "t" "pc" "real-pc" "ivr" "adr" "ir"
         "mar" "mir" "state"
         "counter" "sbus" "dbus" "rbus"))
 
@@ -109,7 +109,7 @@
          [h (map hex v)])
     (send other-registers-panel set n v h d))
 
-  (let ([pc (dec (pc))]
+  (let ([pc (dec (real-pc))]
         [first (send source-code-list get-first-visible-item)]
         [visible (sub1 (send source-code-list number-of-visible-items))])
     (send source-code-list select pc)
@@ -247,10 +247,10 @@
      [label "Run"]
      [callback (lambda (button event)
                  (define (continue?)
-                   (let ([pc (dec (pc))])
+                   (let ([pc (dec (real-pc))])
                      (~> (memory-range pc (+ pc 4)) vector->list (map dec _) (ormap positive? _))))
                  (define (breakpoint?)
-                   (let* ([pc (dec (pc))]
+                   (let* ([pc (dec (real-pc))]
                           [b (find-breakpoint pc)])
                      (if b (if (breakpoint-enabled b)
                                (begin (eval-breakpoint b)

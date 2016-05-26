@@ -5,7 +5,7 @@
 (provide (all-defined-out))
 
 (struct cpu (registers
-             flag sp t pc ivr adr mdr ir mar mir
+             flag sp t pc real-pc ivr adr mdr ir mar mir
              memory
              microprogram state counter
              sbus dbus rbus) #:mutable)
@@ -13,7 +13,7 @@
 (define (make-cpu)
   (define zero (bin 0 16))
   (cpu (make-vector 16 zero)
-       zero zero zero zero zero zero zero zero zero (bin 0 64)
+       zero zero zero zero zero zero zero zero zero zero (bin 0 64)
        (make-vector 65536 zero)
        (make-vector 138 (bin 0 64)) 0 0
        zero zero zero))
@@ -49,6 +49,11 @@
   (cpu-pc a-cpu))
 (define (set-pc! value)
   (set-cpu-pc! a-cpu value))
+
+(define (real-pc)
+  (cpu-real-pc a-cpu))
+(define (set-real-pc! value)
+  (set-cpu-real-pc! a-cpu value))
 
 (define (ivr)
   (cpu-ivr a-cpu))
@@ -521,9 +526,11 @@
              [offset (dec (mir 56 64))])
          (let ([new-mar (bin (+ index offset))])
            (set-mar! new-mar)
+           (when (zero? (dec new-mar)) (set-real-pc! (pc)))
            (set-state! 0)))]
     [9 (let ([new-mar (bin (+ (dec (mar)) 1) 16)])
          (set-mar! new-mar)
+         (when (zero? (dec new-mar)) (set-real-pc! (pc)))
          (set-state! 0))])
   (increment-counter!))
 

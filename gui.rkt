@@ -218,6 +218,13 @@
        [style (list 'single 'column-headers)]
        [columns (list "Line" "Text" "Binary" "Hex" "Decimal")]))
 
+(send source-code-list set-column-width 0
+      30 30 50)
+(send source-code-list set-column-width 1
+      450 300 500)
+(send source-code-list set-column-width 2
+      150 150 200)
+
 (define microprogram-list
   (new list-box%
        [label #f]
@@ -225,6 +232,11 @@
        [choices '()]
        [style (list 'single 'column-headers)]
        [columns (list "Line" "Text" "Hex")]))
+
+(send microprogram-list set-column-width 0
+      30 30 50)
+(send microprogram-list set-column-width 1
+      450 300 500)
 
 (new button%
      [parent buttons-panel]
@@ -301,6 +313,16 @@
        [style (list 'multiple 'column-headers)]
        [columns (list "Register" "Binary" "Hex" "Decimal")]))
 
+(send registers-list set-column-width 0
+      50 50 50)
+(send registers-list set-column-width 1
+      130 130 130)
+(send registers-list set-column-width 2
+      50 50 50)
+(send registers-list set-column-width 3
+      50 50 50)
+
+
 (define memory-list
   (new list-box%
        [label #f]
@@ -309,6 +331,15 @@
        [style (list 'single 'column-headers)]
        [columns (list "Address" "Binary" "Hex" "Decimal")]))
 
+(send memory-list set-column-width 0
+      50 50 50)
+(send memory-list set-column-width 1
+      130 130 130)
+(send memory-list set-column-width 2
+      50 50 50)
+(send memory-list set-column-width 3
+      50 50 50)
+
 (define other-registers-panel
   (new list-box%
        [label #f]
@@ -316,6 +347,16 @@
        [choices '()]
        [style (list 'single 'column-headers)]
        [columns (list "Name" "Binary" "Hex" "Decimal")]))
+
+(send other-registers-panel set-column-width 0
+      50 50 50)
+(send other-registers-panel set-column-width 1
+      130 130 130)
+(send other-registers-panel set-column-width 2
+      50 50 50)
+(send other-registers-panel set-column-width 3
+      50 50 50)
+
 
 (define (eval-input-changed text-field event)
   (let* ([event (send event get-event-type)]
